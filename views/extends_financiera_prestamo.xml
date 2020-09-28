@@ -1,0 +1,28 @@
+<openerp>
+	<data>
+
+		<!-- Prestamo inherit -->
+
+		<record id="prestamo_form_inherited"  model="ir.ui.view">
+			<field name="name">Extension Prestamo Form</field>
+			<field name="model">financiera.prestamo</field>
+			<field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_form"/>
+			<field name="arch" type="xml">        
+				<xpath expr="//field[@name='pago_voluntario_entidad']" position='after'>
+					<div>
+						<field name="mobbex_id" invisible="1"/>
+						<label string="Mobbex - Debito automatico" style="font-weight: bold;"/>
+						<field name="mobbex_debito_automatico" attrs="{'readonly': [('mobbex_id', '=', False)]}"/>
+					</div>
+				</xpath>
+				<!-- <xpath expr="//button[@name='wizard_refinanciar_prestamo']" position='after'>
+					<button name="action_cupon_sent" class="oe_highlight" string="Enviar cupon por mail" type="object" attrs="{'invisible': ['|', ('pagos360_pago_voluntario', '=', False), '|', ('state', 'not in', ('acreditacion_pendiente', 'acreditado')), ('pagos_360_cupon_sent', '=', True)]}"/>
+					<button name="action_cupon_sent" string="Enviar cupon por mail" type="object" attrs="{'invisible': ['|', ('pagos360_pago_voluntario', '=', False), '|', ('state', 'not in', ('acreditacion_pendiente', 'acreditado')), ('pagos_360_cupon_sent', '=', False)]}"/>
+				</xpath>
+				<xpath expr="//field[@name='email_tc_code_sent']" position='after'>
+					<field name="pagos_360_cupon_sent" readonly="1"/>
+				</xpath> -->
+			</field>
+		</record>
+	</data>
+</openerp>

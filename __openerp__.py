@@ -28,6 +28,7 @@
         # 'security/ir.model.access.csv',
         'views/mobbex_config.xml',
 				'views/extends_res_company.xml',
+				'views/extends_financiera_prestamo.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

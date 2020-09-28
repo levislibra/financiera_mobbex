@@ -10,7 +10,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='id_prestamo_venta']" position='after'>
 					<separator string="Modulo Mobbex" colspan="2"/>
-					<field name="mobbex_config_id"/>
+					<field name="mobbex_id"/>
 				</xpath>
 			</field>
 		</record>

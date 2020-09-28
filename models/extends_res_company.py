@@ -7,4 +7,4 @@ class ExtendsResCompany(models.Model):
 	_name = 'res.company'
 	_inherit = 'res.company'
 
-	mobbex_config_id = fields.Many2one('financiera.mobbex.config', 'Configuracion Mobbex')
+	mobbex_id = fields.Many2one('financiera.mobbex.config', 'Configuracion Mobbex')

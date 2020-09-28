@@ -24,9 +24,15 @@
             <group>
               <group>
                 <field name="company_id" groups="base.group_erp_manager"/>
-                <field name="name"/>
+								<field name="name"/>
+								<field name="api_key"/>
+								<field name="access_token"/>
 							</group>
-							<group></group>
+							<group>
+								<field name="return_url"/>
+								<field name="validate_id"/>
+								<field name="accept_no_funds"/>
+							</group>
             </group>
           </sheet>
         </form>
