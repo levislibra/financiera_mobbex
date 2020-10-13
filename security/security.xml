@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <!-- <data noupdate="1"> -->
+
+        <record id="financiera_mobbex_config_rule" model="ir.rule">
+            <field name="name">Financiera Mobbex Config multi-company</field>
+            <field name="model_id" ref="financiera_mobbex.model_financiera_mobbex_config"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">
+            [('company_id','child_of',[user.company_id.id])]</field>
+				</record>
+				
+				<record id="financiera_mobbex_execution_rule" model="ir.rule">
+					<field name="name">Financiera Mobbex Execution multi-company</field>
+					<field name="model_id" ref="financiera_mobbex.model_financiera_mobbex_execution"/>
+					<field eval="True" name="global"/>
+					<field name="domain_force">
+					[('company_id','child_of',[user.company_id.id])]</field>
+			</record>
+
+</openerp>

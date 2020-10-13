@@ -25,10 +25,15 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/user_groups.xml',
+        'security/ir.model.access.csv',
+        'security/security.xml',
         'views/mobbex_config.xml',
+				'views/mobbex_execution.xml',
 				'views/extends_res_company.xml',
 				'views/extends_financiera_prestamo.xml',
+				'views/extends_financiera_prestamo_cuota.xml',
+				'data/ir_cron.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

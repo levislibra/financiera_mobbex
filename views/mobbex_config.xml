@@ -17,9 +17,6 @@
       <field name="model">financiera.mobbex.config</field>
       <field name="arch" type="xml">
         <form create="false" delete="false">
-          <header>
-            <button name="actualizar_saldo" string="Actualizar Saldo" type="object" class="oe_highlight"/>
-          </header>
           <sheet>
             <group>
               <group>
@@ -32,6 +29,10 @@
 								<field name="return_url"/>
 								<field name="validate_id"/>
 								<field name="accept_no_funds"/>
+								<field name="days_execute_on_expiration"/>
+								<field name="days_execute_after"/>
+								<field name="journal_id"/>
+								<field name="factura_electronica"/>
 							</group>
             </group>
           </sheet>
@@ -51,8 +52,10 @@
 
 		<!-- Top menu item -->
 				
-		<menuitem name="Mobbex" id="menu_mobbex" web_icon="financiera_mobbex,static/description/icon.png"/>
-		<menuitem name="Configuracion" id="menu_mobbex_action" parent="menu_mobbex" action="mobbex_action" sequence="0"/>
+		<menuitem name="Mobbex" id="menu_mobbex" groups="financiera_mobbex.manager"
+			web_icon="financiera_mobbex,static/description/icon.png"/>
+		<menuitem name="Configuracion" id="menu_mobbex_action" parent="menu_mobbex" 
+			action="mobbex_action" sequence="10"/>
 
 	</data>
 </openerp>

@@ -10,18 +10,26 @@
 			<field name="arch" type="xml">        
 				<xpath expr="//field[@name='pago_voluntario_entidad']" position='after'>
 					<div>
-						<field name="mobbex_id" invisible="1"/>
 						<label string="Mobbex - Debito automatico" style="font-weight: bold;"/>
 						<field name="mobbex_debito_automatico" attrs="{'readonly': [('mobbex_id', '=', False)]}"/>
 					</div>
 				</xpath>
-				<!-- <xpath expr="//button[@name='wizard_refinanciar_prestamo']" position='after'>
-					<button name="action_cupon_sent" class="oe_highlight" string="Enviar cupon por mail" type="object" attrs="{'invisible': ['|', ('pagos360_pago_voluntario', '=', False), '|', ('state', 'not in', ('acreditacion_pendiente', 'acreditado')), ('pagos_360_cupon_sent', '=', True)]}"/>
-					<button name="action_cupon_sent" string="Enviar cupon por mail" type="object" attrs="{'invisible': ['|', ('pagos360_pago_voluntario', '=', False), '|', ('state', 'not in', ('acreditacion_pendiente', 'acreditado')), ('pagos_360_cupon_sent', '=', False)]}"/>
+				<xpath expr="//group[@name='notificaciones']" position='after'>
+					<group string="Mobbex - Suscripcion tarjeta de debito">
+						<button name="mobbex_create_suscription" string="Crear suscripcion"
+							type="object" confirm="Desea confirmar?"
+							attrs="{'invisible': [('mobbex_suscripcion_id', '!=', False)]}"/>
+						<button name="mobbex_create_suscriptor" string="Crear suscriptor"
+							type="object" confirm="Desea confirmar?"
+							attrs="{'invisible': [('mobbex_suscriptor_id', '!=', False)]}"/>
+						<field name="mobbex_id" invisible="1"/>
+						<field name="mobbex_suscripcion_id" readonly="1"/>
+						<field name="mobbex_suscriptor_id" readonly="1"/>
+						<field name="mobbex_suscriptor_sourceUrl" widget="url" readonly="1"/>
+						<field name="mobbex_suscriptor_subscriberUrl" widget="url" readonly="1"/>
+						<field name="mobbex_suscripcion_suscriptor_confirm" readonly="1"/>
+					</group>
 				</xpath>
-				<xpath expr="//field[@name='email_tc_code_sent']" position='after'>
-					<field name="pagos_360_cupon_sent" readonly="1"/>
-				</xpath> -->
 			</field>
 		</record>
 	</data>

@@ -1,0 +1,37 @@
+<openerp>
+	<data>
+
+		<!-- Prestamo cuota inherit -->
+
+		<record id="prestamo_cuota_form_inherited"  model="ir.ui.view">
+			<field name="name">Extension Prestamo Cuota Form</field>
+			<field name="model">financiera.prestamo.cuota</field>
+			<field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_cuota_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='state']" position='before'>
+					<button name="mobbex_subscriber_execution" string="Ejecutar suscripcion" type="object"/>
+				</xpath>
+				<xpath expr="//page[@name='otra_informacion']" position='inside'>
+					<group string="Mobbex - Suscripcion tarjeta de debito">
+						<field name="mobbex_id" invisible="1"/>
+						<field name="mobbex_program_execution_date"/>
+						<field name="mobbex_ejecucion_ids">
+							<tree create="false" edit="false" delete="false">
+								<field name="create_date" string="Fecha" readonly="1"/>
+								<field name="mobbex_source_name" readonly="1"/>
+								<field name="mobbex_source_type" readonly="1"/>
+								<field name="mobbex_source_number" readonly="1"/>								
+								<field name="mobbex_total" readonly="1"/>
+								<field name="mobbex_currency_code" readonly="1"/>
+								<field name="mobbex_cuota_id" readonly="1"/>
+								<field name="mobbex_payment_id" readonly="1"/>
+								<field name="mobbex_status_code" readonly="1"/>
+								<field name="mobbex_status_message" readonly="1"/>
+							</tree>
+						</field>
+					</group>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>
