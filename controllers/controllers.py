@@ -25,7 +25,9 @@ class FinancieraMobbexWebhookController(http.Controller):
 				_logger.info('Mobbex: No existe reference.')
 				print("kwargs: ", kwargs.__str__)
 				print("kwargs: ", kwargs)
-				print("kwargs: ", kwargs['data'])
+			if 'error' in kwargs:
+				_logger.info('Mobbex: Error')
+				_logger.info('Mobbex: Error'+kwargs['error'])
 		elif webhook_type == "subscription:change_source":
 			_logger.info('Mobbex: cambio Metodo de Pago.')
 		elif webhook_type == "subscription:execution":
