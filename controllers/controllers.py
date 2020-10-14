@@ -12,16 +12,20 @@ class FinancieraMobbexWebhookController(http.Controller):
 	def webhook_listener(self, **kwargs):
 		_logger.info('Mobbex: nuevo webhook.')
 		webhook_type = None
-		_logger.info('Mobbex: tipo '+kwargs)
-		print("kwargs: ", kwargs)
 		if 'type' in kwargs:
 			webhook_type = kwargs['type']
 			_logger.info('Mobbex: tipo '+kwargs['type'])
 		if webhook_type == "subscription:registration":
-			_id = kwargs['data']['subscriber']['reference']
-			prestamo_id = request.env['financiera.prestamo'].sudo().browse(int(_id))
-			prestamo_id.mobbex_suscripcion_exitosa()
-			_logger.info('Mobbex: Nueva suscripcion.')
+			if 'data' in kwargs and 'subscriber' in kwargs['data'] and 'reference' in kwargs['data']['subscriber']:
+				_id = kwargs['data']['subscriber']['reference']
+				prestamo_id = request.env['financiera.prestamo'].sudo().browse(int(_id))
+				prestamo_id.mobbex_suscripcion_exitosa()
+				_logger.info('Mobbex: Nueva suscripcion.')
+			else:
+				_logger.info('Mobbex: No existe reference.')
+				print("kwargs: ", kwargs.__str__)
+				print("kwargs: ", kwargs)
+				print("kwargs: ", kwargs['data'])
 		elif webhook_type == "subscription:change_source":
 			_logger.info('Mobbex: cambio Metodo de Pago.')
 		elif webhook_type == "subscription:execution":
