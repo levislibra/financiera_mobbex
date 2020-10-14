@@ -5,7 +5,7 @@ from openerp.http import request
 import json
 class FinancieraMobbexWebhookController(http.Controller):
 
-	@http.route("/financiera.mobbex/webhook", type="json", auth="public", csrf=False, method=["POST"])
+	@http.route("/financiera.mobbex/webhook", type="http", auth="public", csrf=False, method=["POST"])
 	def webhook_listener(self, **kwargs):
 		print("webhook_listener")
 		webhook_type = None
