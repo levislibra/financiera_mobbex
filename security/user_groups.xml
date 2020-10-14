@@ -27,5 +27,20 @@
         <field name="implied_ids" eval="[(4, ref('user'))]"/>
     </record>
 
+		<!-- Permisos especiales -->
+
+		<record model="ir.module.category" id="financiera_mobbex_permisos_especiales">
+			<field name="name">Mobbex - Permisos especiales</field>
+			<field name="description">Nivel de acceso</field>
+			<field name="sequence">6</field>
+		</record>
+
+		<record id="ejecutar_suscripcion_manual" model="res.groups">
+		 <field name="name">Ejecutar suscripcion manual</field>
+		 <field name="category_id" ref="financiera_mobbex.financiera_mobbex_permisos_especiales"/>
+		</record>
+
+
+
 </data>
 </openerp>

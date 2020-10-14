@@ -8,28 +8,30 @@
 			<field name="model">financiera.prestamo.cuota</field>
 			<field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_cuota_form"/>
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='state']" position='before'>
-					<button name="mobbex_subscriber_execution" string="Ejecutar suscripcion" type="object"/>
-				</xpath>
-				<xpath expr="//page[@name='otra_informacion']" position='inside'>
-					<group string="Mobbex - Suscripcion tarjeta de debito">
-						<field name="mobbex_id" invisible="1"/>
-						<field name="mobbex_program_execution_date"/>
-						<field name="mobbex_ejecucion_ids">
-							<tree create="false" edit="false" delete="false">
-								<field name="create_date" string="Fecha" readonly="1"/>
-								<field name="mobbex_source_name" readonly="1"/>
-								<field name="mobbex_source_type" readonly="1"/>
-								<field name="mobbex_source_number" readonly="1"/>								
-								<field name="mobbex_total" readonly="1"/>
-								<field name="mobbex_currency_code" readonly="1"/>
-								<field name="mobbex_cuota_id" readonly="1"/>
-								<field name="mobbex_payment_id" readonly="1"/>
-								<field name="mobbex_status_code" readonly="1"/>
-								<field name="mobbex_status_message" readonly="1"/>
-							</tree>
-						</field>
-					</group>
+				<xpath expr="//page[@name='otra_informacion']" position='before'>
+					<page name="mobbex" string="Mobbex">
+						<group string="Mobbex - Suscripcion tarjeta de debito">
+							<field name="mobbex_id" invisible="1"/>
+							<field name="mobbex_program_execution_date"/>
+							<label string="-"/>
+							<button name="mobbex_subscriber_execution" string="Ejecutar suscripcion" type="object"
+								confirm="Seguro que desea ejecutar el debito?" groups="financiera_mobbex.ejecutar_suscripcion_manual"/>
+							<field name="mobbex_ejecucion_ids">
+								<tree create="false" edit="false" delete="false">
+									<field name="create_date" string="Fecha" readonly="1"/>
+									<field name="mobbex_source_name" readonly="1"/>
+									<field name="mobbex_source_type" readonly="1"/>
+									<field name="mobbex_source_number" readonly="1"/>								
+									<field name="mobbex_total" readonly="1"/>
+									<field name="mobbex_currency_code" readonly="1"/>
+									<field name="mobbex_cuota_id" readonly="1"/>
+									<field name="mobbex_payment_id" readonly="1"/>
+									<field name="mobbex_status_code" readonly="1"/>
+									<field name="mobbex_status_message" readonly="1"/>
+								</tree>
+							</field>
+						</group>
+					</page>
 				</xpath>
 			</field>
 		</record>
