@@ -12,6 +12,8 @@ class FinancieraMobbexWebhookController(http.Controller):
 	def webhook_listener(self, **kwargs):
 		_logger.info('Mobbex: nuevo webhook.')
 		webhook_type = None
+		_logger.info('Mobbex: tipo '+kwargs)
+		print("kwargs: ", kwargs)
 		if 'type' in kwargs:
 			webhook_type = kwargs['type']
 			_logger.info('Mobbex: tipo '+kwargs['type'])
