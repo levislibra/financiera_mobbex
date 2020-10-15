@@ -12,6 +12,10 @@ class FinancieraMobbexWebhookController(http.Controller):
 	def webhook_listener(self, **post):
 		_logger.info('Mobbex: nuevo webhook.')
 		_logger.info(post.keys())
+		_logger.info("----A-----")
+		_logger.info(request.keys())
+		_logger.info("----B-----")
+		print('request: ', request)
 		print('post: ', post)
 		webhook_type = None
 		if 'type' in post.keys():
