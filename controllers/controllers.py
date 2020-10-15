@@ -9,15 +9,15 @@ _logger = logging.getLogger(__name__)
 class FinancieraMobbexWebhookController(http.Controller):
 
 	@http.route("/financiera.mobbex/webhook", type="http", auth="public", csrf=False)
-	def webhook_listener(self, *args, **post):
+	def webhook_listener(self, **post):
 		_logger.info('Mobbex: nuevo webhook.')
 		_logger.info(post.keys())
 		_logger.info("----A-----")
-		_logger.info(args)
+		_logger.info(request.httprequest.args)
 		_logger.info("----B-----")
-		_logger.info(request.httprequest.method)
-		_logger.info("----C-----")
-		print('post: ', post)
+		# _logger.info(request.httprequest.method)
+		# _logger.info("----C-----")
+		# print('post: ', post)
 		webhook_type = None
 		if 'type' in post.keys():
 			webhook_type = post.get('type')
