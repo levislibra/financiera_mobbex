@@ -8,32 +8,33 @@ import json
 _logger = logging.getLogger(__name__)
 class FinancieraMobbexWebhookController(http.Controller):
 
-	@http.route("/financiera.mobbex/webhook", type="http", auth="public", csrf=False, method=["POST"])
-	def webhook_listener(self, **kwargs):
+	@http.route("/financiera.mobbex/webhook", type="json", auth="public", csrf=False, method=["POST"])
+	def webhook_listener(self, **post):
 		_logger.info('Mobbex: nuevo webhook.')
+		print('request: ', request)
 		webhook_type = None
-		if 'type' in kwargs:
-			webhook_type = kwargs['type']
-			_logger.info('Mobbex: tipo '+kwargs['type'])
+		if 'type' in post.keys():
+			webhook_type = post.get('type')
+			_logger.info('Mobbex: tipo '+post.get('type'))
 		if webhook_type == "subscription:registration":
-			if 'data' in kwargs and 'subscriber' in kwargs['data'] and 'reference' in kwargs['data']['subscriber']:
-				_id = kwargs['data']['subscriber']['reference']
+			if 'data' in post.keys() and 'subscriber' in post.get('data').keys() and 'reference' in post.get('data').get('subscriber').keys():
+				_id = post.get('data').get('subscriber').get('reference')
 				prestamo_id = request.env['financiera.prestamo'].sudo().browse(int(_id))
 				prestamo_id.mobbex_suscripcion_exitosa()
 				_logger.info('Mobbex: Nueva suscripcion.')
 			else:
 				_logger.info('Mobbex: No existe reference.')
-				print("kwargs: ", kwargs.__str__)
-				print("kwargs: ", kwargs)
-			if 'error' in kwargs:
+				print("post: ", post.keys())
+				print("post XX: ", post)
+			if 'error' in post.keys():
 				_logger.info('Mobbex: Error')
-				_logger.info('Mobbex: Error'+kwargs['error'])
+				_logger.info('Mobbex: Error'+post.get('error'))
 		elif webhook_type == "subscription:change_source":
 			_logger.info('Mobbex: cambio Metodo de Pago.')
 		elif webhook_type == "subscription:execution":
-			_id = kwargs['data']['subscriber']['reference']
+			_id = post.get('data').get('subscriber').get('reference')
 			cuota_id = request.env['financiera.prestamo.cuota'].sudo().browse(int(_id))
-			cuota_id.mobbex_read_execution(kwargs['data'])
+			cuota_id.mobbex_read_execution(post.get('data'))
 			_logger.info('Mobbex: registrando nuevo debito.')
 		elif webhook_type == "subscription:subscriber:suspended":
 			_logger.info('Mobbex: suscriptor suspendido.')
