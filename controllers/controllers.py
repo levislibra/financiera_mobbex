@@ -8,14 +8,15 @@ import json
 _logger = logging.getLogger(__name__)
 class FinancieraMobbexWebhookController(http.Controller):
 
-	@http.route("/financiera.mobbex/webhook", type="http", auth="public", csrf=False, method=["POST"])
+	@http.route("/financiera.mobbex/webhook", type="http", auth="public", csrf=False)
 	def webhook_listener(self, **post):
 		_logger.info('Mobbex: nuevo webhook.')
 		_logger.info(post.keys())
 		_logger.info("----A-----")
-		_logger.info(request)
+		_logger.info(request.httprequest)
 		_logger.info("----B-----")
-		print('request.params: ', request.params)
+		_logger.info(request.httprequest.method)
+		_logger.info("----C-----")
 		print('post: ', post)
 		webhook_type = None
 		if 'type' in post.keys():
