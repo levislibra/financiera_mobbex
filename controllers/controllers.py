@@ -15,7 +15,7 @@ class FinancieraMobbexWebhookController(http.Controller):
 		_logger.info("----A-----")
 		_logger.info(request)
 		_logger.info("----B-----")
-		print('request: ', request)
+		print('request.params: ', request.params)
 		print('post: ', post)
 		webhook_type = None
 		if 'type' in post.keys():
