@@ -13,7 +13,7 @@ class FinancieraMobbexWebhookController(http.Controller):
 		_logger.info('Mobbex: nuevo webhook.')
 		_logger.info(post.keys())
 		_logger.info("----A-----")
-		_logger.info(request.keys())
+		_logger.info(request)
 		_logger.info("----B-----")
 		print('request: ', request)
 		print('post: ', post)
