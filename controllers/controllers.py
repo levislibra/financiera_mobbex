@@ -37,12 +37,12 @@ class FinancieraMobbexWebhookController(http.Controller):
 			_logger.info('Mobbex: suscriptor suspendido.')
 		elif webhook_type == "subscription:subscriber:active":
 			_logger.info('Mobbex: suscriptor activado.')
-		
+
 		print('{}\n{}\r\n{}\r\n\r\n{}'.format(
 				'-----------START-----------',
 				request.httprequest.method + ' ' + request.httprequest.url,
 				'\r\n'.join('{}: {}'.format(k, v) for k, v in request.httprequest.headers.items()),
-				request.httprequest.body,
+				request.httprequest.data,
 		))
 		return json.dumps("OK")
 
