@@ -36,7 +36,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 				primer_fecha = fecha_actual + relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration)
 				segunda_fecha = fecha_actual + relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration+1)
 				tercer_fecha = fecha_actual + relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration+2)
-				cuarta_fecha = fecha_actual + relativedelta.relativedelta(days=mobbex_id.days_execute_after)
+				cuarta_fecha = fecha_actual + relativedelta.relativedelta(days=-mobbex_id.days_execute_after)
 				fechas_ejecucion = [
 					primer_fecha.__str__(),
 					segunda_fecha.__str__(),
@@ -79,7 +79,6 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 
 	@api.one
 	def mobbex_read_execution(self, post):
-		print("mobbex_read_execution")
 		values = {
 			'company_id': self.company_id.id,
 		}
@@ -103,14 +102,12 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			values['mobbex_source_number'] = post['data[payment][source][type]']
 		if 'data[execution][uid]' in post:
 			values['mobbex_ejecucion_id'] = post['data[execution][uid]']
-		print("values: ", values)
 		execution_id = self.env['financiera.mobbex.execution'].create(values)
 		self.mobbex_ejecucion_ids = [execution_id.id]
 		self.mobbex_cobrar_cuota(execution_id)
 
 	@api.one
 	def mobbex_cobrar_cuota(self, execution_id):
-		print("mobbex_cobrar_cuota")
 		# Cobro cuota
 		payment_date = datetime.now()
 		journal_id = self.mobbex_id.journal_id

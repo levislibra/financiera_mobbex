@@ -35,7 +35,6 @@ class ExtendsFinancieraPrestamo(models.Model):
 
 	@api.one
 	def mobbex_create_suscription(self):
-		print("mobbex_create_suscription")
 		url = URL_SUSCRIPTIONS
 		headers = {
 			'x-api-key': self.mobbex_id.api_key,
@@ -62,14 +61,12 @@ class ExtendsFinancieraPrestamo(models.Model):
 		}
 		r = requests.post(url, data=json.dumps(body), headers=headers)
 		data = r.json()
-		print("RET data: ", data)
 		if 'result' in data and data['result'] == True:
 			self.mobbex_suscripcion_id = data['data']['uid']
 			self.mobbex_suscripcion_shorten_url = data['data']['shorten_url']
 
 	@api.one
 	def mobbex_obtener_suscription(self):
-		print("mobbex_obtener_suscription")
 		url = URL_SUSCRIPTIONS+self.mobbex_suscripcion_id
 		headers = {
 			'x-api-key': self.mobbex_id.api_key,
@@ -77,11 +74,9 @@ class ExtendsFinancieraPrestamo(models.Model):
 			'content-type': 'application/json',
 		}
 		r = requests.get(url, headers=headers)
-		print("RET obtener r: ", r)
 
 	@api.one
 	def mobbex_activate_suscription(self):
-		print("mobbex_activate_suscription")
 		url = URL_SUSCRIPTIONS+self.mobbex_suscripcion_id+'/action/activate'
 		headers = {
 			'x-api-key': self.mobbex_id.api_key,
@@ -89,12 +84,10 @@ class ExtendsFinancieraPrestamo(models.Model):
 			'content-type': 'application/json',
 		}
 		r = requests.get(url, headers=headers)
-		print("RET Activa r: ", r)
 
 
 	@api.one
 	def mobbex_create_suscriptor(self):
-		print("mobbex_create_suscriptor")
 		url = URL_SUSCRIPTIONS+self.mobbex_suscripcion_id+'/subscriber'
 		headers = {
 			'x-api-key': self.mobbex_id.api_key,
@@ -117,7 +110,6 @@ class ExtendsFinancieraPrestamo(models.Model):
 		}
 		r = requests.post(url, data=json.dumps(body), headers=headers)
 		data = r.json()
-		print("RET data: ", data)
 		if 'result' in data and data['result'] == True:
 			self.mobbex_suscriptor_id = data['data']['uid']
 			self.mobbex_suscriptor_sourceUrl = data['data']['sourceUrl']
