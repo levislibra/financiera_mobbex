@@ -11,15 +11,17 @@ class FinancieraMobbexWebhookController(http.Controller):
 	@http.route("/financiera.mobbex/webhook", auth="public", csrf=False)
 	def webhook_listener(self, **post):
 		_logger.info('Mobbex: nuevo webhook.')
-		data = request.httprequest.data
-		data_in_json = yaml.load(data)
 		_logger.info("----A-----")
-		_logger.info(data)
-		_logger.info("----B-----")
-		_logger.info(data_in_json)
-		_logger.info("----C-----")
-		print('post: ', post)
-		_logger.info("----D-----")
+		print('{}\n{}\r\n{}\r\n\r\n{}'.format(
+			'-----------START-----------',
+			request.method + ' ' + request.url,
+			'\r\n'.join('{}: {}'.format(k, v) for k, v in request.headers.items()),
+			request.body,
+		))
+		# for item in request:
+		# 	_logger.info("----B-----")
+		# 	_logger.info("----B-----")
+
 		webhook_type = None
 		if 'type' in post.keys():
 			webhook_type = post.get('type')
