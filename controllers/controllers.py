@@ -26,8 +26,8 @@ class FinancieraMobbexWebhookController(http.Controller):
 		elif webhook_type == "subscription:change_source":
 			_logger.info('Mobbex: cambio Metodo de Pago.')
 		elif webhook_type == "subscription:execution":
-			if 'data[subscriber][reference]' in post:
-				_id = post['data[subscriber][reference]']
+			if 'data[payment][reference]' in post:
+				_id = post['data[payment][reference]']
 				_logger.info("_id")
 				_logger.info(_id)
 				cuota_id = request.env['financiera.prestamo.cuota'].sudo().browse(int(_id))
