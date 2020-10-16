@@ -5,6 +5,7 @@ from openerp import models, fields, api
 class FinancieraMobbexExecution(models.Model):
 	_name = 'financiera.mobbex.execution'
 
+	_order = 'id desc'
 	mobbex_id = fields.Many2one('financiera.mobbex.config', related='company_id.mobbex_id', readonly=True)
 	mobbex_cuota_id = fields.Many2one('financiera.prestamo.cuota', 'Cuota')
 	partner_id = fields.Many2one('res.partner', related='mobbex_cuota_id.partner_id', readonly=True)
