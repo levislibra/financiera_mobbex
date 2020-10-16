@@ -79,34 +79,30 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			pass
 
 	@api.one
-	def mobbex_read_execution(self, data):
+	def mobbex_read_execution(self, post):
 		values = {
 			'company_id': self.company_id.id,
 		}
-		if 'payment' in data:
-			if 'status' in data['payment']:
-				if 'code' in data['payment']['status']:
-					values['mobbex_status_code'] = data['payment']['status']['code']
-				if 'text' in data['payment']['status']:
-					values['mobbex_status_text'] = data['payment']['status']['text']
-				if 'message' in data['payment']['status']:
-					values['mobbex_status_message'] = data['payment']['status']['message']
-			if 'total' in data['payment']:
-				values['mobbex_total'] = data['payment']['total']
-			if 'currency' in data['payment']:
-				if 'code' in data['payment']['currency']:
-					values['mobbex_currency_code'] = data['payment']['currency']['code']
-				if 'text' in data['payment']['currency']:
-					values['mobbex_currency_text'] = data['payment']['currency']['text']
-			if 'source' in data['payment']:
-				if 'name' in data['payment']['source']:
-					values['mobbex_source_name'] = data['payment']['source']['name']
-				if 'type' in data['payment']['source']:
-					values['mobbex_source_type'] = data['payment']['source']['type']
-				if 'number' in data['payment']['source']:
-					values['mobbex_source_number'] = data['payment']['source']['number']
-		if 'execution' in data and 'uid' in data['execution']:
-			values['mobbex_ejecucion_id'] = data['execution']['uid']
+		if 'data[payment][status][code]' in post:
+			values['mobbex_status_code'] = post['data[payment][status][code]']
+		if 'data[payment][status][text]' in post:
+			values['mobbex_status_text'] = post['data[payment][status][text]']
+		if 'data[payment][status][message]' in post:
+			values['mobbex_status_message'] = post['data[payment][status][message]']
+		if 'data[payment][total]' in post:
+			values['mobbex_total'] = post['data[payment][total]']
+		if 'data[payment][currency][code]' in post:
+			values['mobbex_currency_code'] = post['data[payment][currency][code]']
+		if 'data[payment][currency][text]' in post:
+			values['mobbex_currency_text'] = post['data[payment][currency][text]']
+		if 'data[payment][source][name]' in post:
+			values['mobbex_source_name'] = post['data[payment][source][name]']
+		if 'data[payment][source][type]' in post:
+			values['mobbex_source_type'] = post['data[payment][source][type]']
+		if 'data[payment][source][number]' in post:
+			values['mobbex_source_number'] = post['data[payment][source][type]']
+		if 'data[execution][uid]' in post:
+			values['mobbex_ejecucion_id'] = post['data[execution][uid]']
 		execution_id = self.env['financiera.mobbex.execution'].create(values)
 		self.mobbex_ejecucion_ids = [execution_id.id]
 		self.mobbex_cobrar_cuota(execution_id)
