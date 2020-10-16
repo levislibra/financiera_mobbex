@@ -49,7 +49,6 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					('prestamo_id.mobbex_debito_automatico', '=', True),
 					('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
 					('state', 'in', ('activa', 'judicial', 'incobrable')),
-					('saldo', '>', 0),
 					'|', ('fecha_vencimiento', 'in', fechas_ejecucion), 
 					('mobbex_program_execution_date', '=', fecha_actual),
 				])
@@ -80,6 +79,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 
 	@api.one
 	def mobbex_read_execution(self, post):
+		print("mobbex_read_execution")
 		values = {
 			'company_id': self.company_id.id,
 		}
@@ -103,12 +103,14 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			values['mobbex_source_number'] = post['data[payment][source][type]']
 		if 'data[execution][uid]' in post:
 			values['mobbex_ejecucion_id'] = post['data[execution][uid]']
+		print("values: ", values)
 		execution_id = self.env['financiera.mobbex.execution'].create(values)
 		self.mobbex_ejecucion_ids = [execution_id.id]
 		self.mobbex_cobrar_cuota(execution_id)
 
 	@api.one
 	def mobbex_cobrar_cuota(self, execution_id):
+		print("mobbex_cobrar_cuota")
 		# Cobro cuota
 		payment_date = datetime.now()
 		journal_id = self.mobbex_id.journal_id
