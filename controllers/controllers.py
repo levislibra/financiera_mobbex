@@ -9,22 +9,11 @@ _logger = logging.getLogger(__name__)
 class FinancieraMobbexWebhookController(http.Controller):
 
 	@http.route("/financiera.mobbex/webhook", auth="public", csrf=False)
-	def webhook_listener(self, *args, **post):
+	def webhook_listener(self, **post):
 		_logger.info('Mobbex: nuevo webhook.')
 		_logger.info("----A-----")
-		_logger.info(args)
-		_logger.info("----B-----")
-		_logger.info(request.httprequest.args)
+		_logger.info(post)
 		_logger.info("----C-----")
-		for item in request:
-			_logger.info("----||-----")
-			_logger.info(item)
-		print('{}\n{}\r\n{}\r\n\r\n{}'.format(
-        '-----------START-----------',
-        request.httprequest.method + ' ' + request.httprequest.url,
-        '\r\n'.join('{}: {}'.format(k, v) for k, v in request.httprequest.headers.items()),
-        request.httprequest.body,
-    ))
 		webhook_type = None
 		if 'type' in post.keys():
 			webhook_type = post.get('type')
@@ -37,11 +26,6 @@ class FinancieraMobbexWebhookController(http.Controller):
 				_logger.info('Mobbex: Nueva suscripcion.')
 			else:
 				_logger.info('Mobbex: No existe reference.')
-				print("post: ", post.keys())
-				print("post XX: ", post)
-			if 'error' in post.keys():
-				_logger.info('Mobbex: Error')
-				_logger.info('Mobbex: Error'+post.get('error'))
 		elif webhook_type == "subscription:change_source":
 			_logger.info('Mobbex: cambio Metodo de Pago.')
 		elif webhook_type == "subscription:execution":
@@ -53,5 +37,12 @@ class FinancieraMobbexWebhookController(http.Controller):
 			_logger.info('Mobbex: suscriptor suspendido.')
 		elif webhook_type == "subscription:subscriber:active":
 			_logger.info('Mobbex: suscriptor activado.')
+		
+		print('{}\n{}\r\n{}\r\n\r\n{}'.format(
+				'-----------START-----------',
+				request.httprequest.method + ' ' + request.httprequest.url,
+				'\r\n'.join('{}: {}'.format(k, v) for k, v in request.httprequest.headers.items()),
+				request.httprequest.body,
+		))
 		return json.dumps("OK")
 
