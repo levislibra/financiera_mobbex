@@ -8,6 +8,7 @@ class FinancieraMobbexConfig(models.Model):
 	name = fields.Char('Nombre')
 	api_key = fields.Char('API Key')
 	access_token = fields.Char('Token')
+	set_default_payment = fields.Boolean('Marcar como medio de pago por defecto')
 	return_url = fields.Char('Url posterior a la suscripcion')
 	validate_id = fields.Boolean('Rechazar si el DNI no coincide contra la Tarjeta')
 	accept_no_funds = fields.Boolean('Aceptar tarjeta que no posea fondos')

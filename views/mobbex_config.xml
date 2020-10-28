@@ -26,6 +26,7 @@
 								<field name="access_token"/>
 							</group>
 							<group>
+								<field name="set_default_payment"/>
 								<field name="return_url"/>
 								<field name="validate_id"/>
 								<field name="accept_no_funds"/>

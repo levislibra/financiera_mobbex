@@ -26,6 +26,16 @@ class ExtendsFinancieraPrestamo(models.Model):
 	mobbex_suscriptor_subscriberUrl = fields.Char('Mobbex - Url para el control')
 	mobbex_suscripcion_suscriptor_confirm = fields.Boolean('Mobbex - Suscripcion exitosa')
 
+	@api.model
+	def default_get(self, fields):
+		rec = super(ExtendsFinancieraPrestamo, self).default_get(fields)
+		if len(self.env.user.company_id.mobbex_id) > 0:
+			rec.update({
+				'mobbex_debito_automatico': self.env.user.company_id.mobbex_id.set_default_payment,
+			})
+		return rec
+
+
 	@api.one
 	def enviar_a_autorizado(self):
 		super(ExtendsFinancieraPrestamo, self).enviar_a_autorizado()
