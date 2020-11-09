@@ -9,7 +9,6 @@ import json
 URL_SUSCRIPTIONS = 'https://api.mobbex.com/p/subscriptions/'
 
 WEBHOOK_DIR = "https://cloudlibrasoft.com/financiera.mobbex/webhook"
-# WEBHOOK_DIR = "http://localhost:8069/financiera.mobbex/webhook"
 
 class ExtendsFinancieraPrestamo(models.Model):
 	_inherit = 'financiera.prestamo' 

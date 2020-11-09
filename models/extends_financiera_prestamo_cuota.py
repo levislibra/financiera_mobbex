@@ -33,10 +33,10 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			company_id = company_obj.browse(cr, uid, _id)
 			if len(company_id.mobbex_id) > 0:
 				mobbex_id = company_id.mobbex_id
-				primer_fecha = fecha_actual + relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration)
-				segunda_fecha = fecha_actual + relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration+1)
-				tercer_fecha = fecha_actual + relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration+2)
-				cuarta_fecha = fecha_actual + relativedelta.relativedelta(days=-mobbex_id.days_execute_after)
+				primer_fecha = fecha_actual - relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration)
+				segunda_fecha = primer_fecha - relativedelta.relativedelta(days=1)
+				tercer_fecha = primer_fecha - relativedelta.relativedelta(days=2)
+				cuarta_fecha = fecha_actual - relativedelta.relativedelta(days=mobbex_id.days_execute_after)
 				fechas_ejecucion = [
 					primer_fecha.__str__(),
 					segunda_fecha.__str__(),
