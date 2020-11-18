@@ -24,6 +24,8 @@ class ExtendsFinancieraPrestamo(models.Model):
 	mobbex_suscriptor_sourceUrl = fields.Char('Mobbex - Url para el suscriptor')
 	mobbex_suscriptor_subscriberUrl = fields.Char('Mobbex - Url para el control')
 	mobbex_suscripcion_suscriptor_confirm = fields.Boolean('Mobbex - Suscripcion exitosa')
+	# Otros
+	mobbex_days_execute_on_expiration = fields.Integer('Desplazamiento de dias para primer debito con respecto al vencimiento', compute='_compute_mobbex_days_execute_on_expiration')
 
 	@api.model
 	def default_get(self, fields):
@@ -127,3 +129,8 @@ class ExtendsFinancieraPrestamo(models.Model):
 	@api.one
 	def mobbex_suscripcion_exitosa(self):
 		self.mobbex_suscripcion_suscriptor_confirm = True
+
+	@api.one
+	def _compute_mobbex_days_execute_on_expiration(self):
+		self.mobbex_days_execute_on_expiration = abs(self.mobbex_id.days_execute_on_expiration)
+
