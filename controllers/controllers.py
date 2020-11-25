@@ -18,6 +18,7 @@ class FinancieraMobbexWebhookController(http.Controller):
 		if webhook_type == "subscription:registration":
 			if 'data[subscriber][reference]' in post:
 				_id = post['data[subscriber][reference]']
+				_logger.info('Mobbex: subscriber id '+_id)
 				prestamo_id = request.env['financiera.prestamo'].sudo().browse(int(_id))
 				prestamo_id.mobbex_suscripcion_exitosa()
 				_logger.info('Mobbex: Nueva suscripcion.')
