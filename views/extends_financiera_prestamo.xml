@@ -16,18 +16,16 @@
 				</xpath>
 				<xpath expr="//group[@name='notificaciones']" position='after'>
 					<group string="Mobbex - Suscripcion tarjeta de debito">
-						<button name="mobbex_create_suscription" string="Crear suscripcion"
-							type="object" confirm="Desea confirmar?"
-							attrs="{'invisible': [('mobbex_suscripcion_id', '!=', False)]}"/>
+						<button name="button_mobbex_create_suscription" string="Crear suscripcion"
+							type="object" confirm="Desea confirmar?"/>
 						<button name="mobbex_create_suscriptor" string="Crear suscriptor"
-							type="object" confirm="Desea confirmar?"
-							attrs="{'invisible': [('mobbex_suscriptor_id', '!=', False)]}"/>
+							type="object" confirm="Desea confirmar?"/>
 						<field name="mobbex_id" invisible="1"/>
 						<field name="mobbex_suscripcion_id" readonly="1"/>
 						<field name="mobbex_suscriptor_id" readonly="1"/>
 						<field name="mobbex_suscriptor_sourceUrl" widget="url" readonly="1"/>
 						<field name="mobbex_suscriptor_subscriberUrl" widget="url" readonly="1"/>
-						<field name="mobbex_suscripcion_suscriptor_confirm" readonly="1"/>
+						<field name="mobbex_suscripcion_suscriptor_confirm" readonly="0"/>
 					</group>
 				</xpath>
 			</field>

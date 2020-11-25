@@ -2,6 +2,7 @@
 
 from openerp import models, fields, api
 from datetime import datetime, timedelta
+from openerp.exceptions import UserError, ValidationError
 
 import requests
 import json
@@ -58,7 +59,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 		if self.mobbex_id.accept_no_funds:
 			features.append("accept_no_funds")
 		name = self.partner_id.name
-		name += " ("+str(self.partner_id.main_id_number)+"): "
+		name += " ("+self.partner_id.dni+"): "
 		name += self.name
 		body = {
 			'total': 0,
@@ -75,6 +76,15 @@ class ExtendsFinancieraPrestamo(models.Model):
 		if 'result' in data and data['result'] == True:
 			self.mobbex_suscripcion_id = data['data']['uid']
 			self.mobbex_suscripcion_shorten_url = data['data']['shorten_url']
+
+	@api.one
+	def button_mobbex_create_suscription(self):
+		self.mobbex_create_suscription()
+		self.mobbex_suscriptor_id = None
+		self.mobbex_suscriptor_sourceUrl = None
+		self.mobbex_suscriptor_subscriberUrl = None
+		self.mobbex_suscripcion_suscriptor_confirm = False
+
 
 	@api.one
 	def mobbex_obtener_suscription(self):
@@ -106,9 +116,11 @@ class ExtendsFinancieraPrestamo(models.Model):
 			'content-type': 'application/json',
 		}
 		current_day = datetime.now()
+		if self.partner_id.dni == False:
+			raise UserError("Error en DNI del cliente.")
 		body = {
 			'customer': {
-				'identification': str(self.partner_id.main_id_number),
+				'identification': self.partner_id.dni,
 				'email': self.partner_id.email,
 				'name': self.partner_id.name,
 				'phone': str(self.partner_id.mobile),
