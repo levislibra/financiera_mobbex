@@ -104,7 +104,8 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			values['mobbex_ejecucion_id'] = post['data[execution][uid]']
 		execution_id = self.env['financiera.mobbex.execution'].create(values)
 		self.mobbex_ejecucion_ids = [execution_id.id]
-		self.mobbex_cobrar_cuota(execution_id)
+		if execution_id.mobbex_status_code == '200':
+			self.mobbex_cobrar_cuota(execution_id)
 
 	@api.one
 	def mobbex_cobrar_cuota(self, execution_id):
