@@ -110,6 +110,10 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 	@api.one
 	def mobbex_cobrar_cuota(self, execution_id):
 		# Cobro cuota
+		cr = self.env.cr
+		uid = self.env.uid
+		superuser_id = self.pool.get('res.users').browse(cr, uid, 1)
+		superuser_id.company_id = self.company_id.id
 		payment_date = datetime.now()
 		journal_id = self.mobbex_id.journal_id
 		factura_electronica = self.mobbex_id.factura_electronica
