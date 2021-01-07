@@ -128,7 +128,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 			'reference': str(self.id),
 			'startDate': {
 				'day': current_day.day,
-				'month': current_day.month-1,
+				'month': current_day.month,
 			},
 		}
 		r = requests.post(url, data=json.dumps(body), headers=headers)
