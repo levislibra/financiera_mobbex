@@ -25,6 +25,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 	mobbex_suscriptor_sourceUrl = fields.Char('Mobbex - Url para el suscriptor')
 	mobbex_suscriptor_subscriberUrl = fields.Char('Mobbex - Url para el control')
 	mobbex_suscripcion_suscriptor_confirm = fields.Boolean('Mobbex - Suscripcion exitosa')
+	mobbex_suscripcion_suscriptor_attempts = fields.Integer('Mobbex - Intentos de suscripcion')
 	# Otros
 	mobbex_days_execute_on_expiration = fields.Integer('Desplazamiento de dias para primer debito con respecto al vencimiento', compute='_compute_mobbex_days_execute_on_expiration')
 
@@ -70,6 +71,11 @@ class ExtendsFinancieraPrestamo(models.Model):
 			'webhook': WEBHOOK_DIR,
 			'return_url': self.mobbex_id.return_url,
 			'features': features,
+			'options': {
+          'button': True,
+          'embed': True,
+          'domain': self.company_id.portal_url,
+			}
 		}
 		r = requests.post(url, data=json.dumps(body), headers=headers)
 		data = r.json()

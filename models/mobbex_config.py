@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
+import logging
+from datetime import datetime, timedelta, date
+import requests
+import json
 
+_logger = logging.getLogger(__name__)
+URL_SUSCRIPTIONS = 'https://api.mobbex.com/p/subscriptions/'
 class FinancieraMobbexConfig(models.Model):
 	_name = 'financiera.mobbex.config'
 
@@ -18,3 +24,41 @@ class FinancieraMobbexConfig(models.Model):
 	journal_id = fields.Many2one('account.journal', 'Diario de Cobro', domain="[('type', 'in', ('cash', 'bank'))]")
 	factura_electronica = fields.Boolean('Factura electronica')
 
+	@api.one
+	def button_mobbex_debit_execute(self):
+		cr = self.env.cr
+		uid = self.env.uid
+		fecha_actual = date.today()
+		print("fecha_actual: ", fecha_actual)
+		_logger.info('Mobbex: iniciando debito de cuotas manual.')
+		count = 0
+		if len(self.company_id.mobbex_id) > 0:
+			# mobbex_id = self.company_id.mobbex_id
+			today = datetime.today()
+			fecha_inicial = today.date().replace(day=1)
+			print("fecha_inicial: ", fecha_inicial)
+			cuotas_obj = self.pool.get('financiera.prestamo.cuota')
+			cuotas_ids = cuotas_obj.search(cr, uid, [
+				('company_id', '=', self.company_id.id),
+				('prestamo_id.mobbex_debito_automatico', '=', True),
+				('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
+				('state', 'in', ('activa', 'judicial', 'incobrable')),
+				('fecha_vencimiento', '>=', fecha_inicial), 
+				('fecha_vencimiento', '<=', fecha_actual),
+			])
+			print("cuotas_ids: ", cuotas_ids)
+			create_on = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y, %H:%M:%S")
+			print("create_on: ", create_on)
+			for _id in cuotas_ids:
+				cuota_id = cuotas_obj.browse(cr, uid, _id)
+				execution_obj = self.pool.get('financiera.mobbex.execution')
+				execution_ids = execution_obj.search(cr, uid, [
+					('mobbex_cuota_id', '=', cuota_id.id),
+					('create_date', '>=', create_on),
+					('mobbex_status_code', '=', '410')
+				])
+				print("execution_ids: ", execution_ids)
+				if not len(execution_ids) > 0:
+					cuota_id.mobbex_subscriber_execution()
+					count += 1
+		_logger.info('Mobbex: finalizo el debito de cuotas manual: %s cuotas ejecutadas', count)

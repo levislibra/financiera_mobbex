@@ -17,6 +17,12 @@
       <field name="model">financiera.mobbex.config</field>
       <field name="arch" type="xml">
         <form create="false" delete="false">
+					<header>
+						<!-- <button string="" name="action_name" type="object" class="oe_highlight"/> -->
+						<button name="button_mobbex_debit_execute" string="Ejecutar suscripciones" type="object"
+							confirm="Esta por ejecutar los debitos del mes actual hasta la fecha. Seguro que desea realizar esta accion?" 
+							groups="financiera_mobbex.ejecutar_suscripcion_manual"/>
+					</header>
           <sheet>
             <group>
               <group>

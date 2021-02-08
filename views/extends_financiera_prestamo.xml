@@ -26,6 +26,7 @@
 						<field name="mobbex_suscriptor_sourceUrl" widget="url" readonly="1"/>
 						<field name="mobbex_suscriptor_subscriberUrl" widget="url" readonly="1"/>
 						<field name="mobbex_suscripcion_suscriptor_confirm" readonly="0"/>
+						<field name="mobbex_suscripcion_suscriptor_attempts" readonly="1"/>
 					</group>
 				</xpath>
 			</field>
