@@ -29,14 +29,11 @@ class FinancieraMobbexConfig(models.Model):
 		cr = self.env.cr
 		uid = self.env.uid
 		fecha_actual = date.today()
-		print("fecha_actual: ", fecha_actual)
 		_logger.info('Mobbex: iniciando debito de cuotas manual.')
 		count = 0
 		if len(self.company_id.mobbex_id) > 0:
-			# mobbex_id = self.company_id.mobbex_id
 			today = datetime.today()
 			fecha_inicial = today.date().replace(day=1)
-			print("fecha_inicial: ", fecha_inicial)
 			cuotas_obj = self.pool.get('financiera.prestamo.cuota')
 			cuotas_ids = cuotas_obj.search(cr, uid, [
 				('company_id', '=', self.company_id.id),
@@ -46,9 +43,7 @@ class FinancieraMobbexConfig(models.Model):
 				('fecha_vencimiento', '>=', fecha_inicial), 
 				('fecha_vencimiento', '<=', fecha_actual),
 			])
-			print("cuotas_ids: ", cuotas_ids)
 			create_on = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y, %H:%M:%S")
-			print("create_on: ", create_on)
 			for _id in cuotas_ids:
 				cuota_id = cuotas_obj.browse(cr, uid, _id)
 				execution_obj = self.pool.get('financiera.mobbex.execution')
@@ -57,7 +52,6 @@ class FinancieraMobbexConfig(models.Model):
 					('create_date', '>=', create_on),
 					('mobbex_status_code', '=', '410')
 				])
-				print("execution_ids: ", execution_ids)
 				if not len(execution_ids) > 0:
 					cuota_id.mobbex_subscriber_execution()
 					count += 1
