@@ -14,12 +14,8 @@
 						<field name="mobbex_debito_automatico" attrs="{'readonly': [('mobbex_id', '=', False)]}"/>
 					</div>
 				</xpath>
-				<xpath expr="//group[@name='notificaciones']" position='after'>
+				<xpath expr="//page[@name='otra_informacion']" position='inside'>
 					<group string="Mobbex - Suscripcion tarjeta de debito">
-						<button name="button_mobbex_create_suscription" string="Crear suscripcion"
-							type="object" confirm="Desea confirmar?"/>
-						<button name="mobbex_create_suscriptor" string="Crear suscriptor"
-							type="object" confirm="Desea confirmar?"/>
 						<field name="mobbex_id" invisible="1"/>
 						<field name="mobbex_suscripcion_id" readonly="1"/>
 						<field name="mobbex_suscriptor_id" readonly="1"/>
@@ -27,6 +23,12 @@
 						<field name="mobbex_suscriptor_subscriberUrl" widget="url" readonly="1"/>
 						<field name="mobbex_suscripcion_suscriptor_confirm" readonly="0"/>
 						<field name="mobbex_suscripcion_suscriptor_attempts" readonly="1"/>
+					</group>
+					<group col="1">
+						<button name="button_mobbex_create_suscription" string="Crear suscripcion"
+							type="object" confirm="Desea confirmar?"/>
+						<button name="mobbex_create_suscriptor" string="Crear suscriptor"
+							type="object" confirm="Desea confirmar?"/>
 					</group>
 				</xpath>
 			</field>
