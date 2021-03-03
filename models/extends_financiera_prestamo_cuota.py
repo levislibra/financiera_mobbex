@@ -19,6 +19,11 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 	mobbex_id = fields.Many2one('financiera.mobbex.config', related='company_id.mobbex_id', readonly=True)
 	mobbex_ejecucion_ids = fields.One2many('financiera.mobbex.execution', 'mobbex_cuota_id', 'Ejecuciones')
 	mobbex_program_execution_date = fields.Date('Fecha de ejecucion programada')
+	# Datos del prestamo
+	mobbex_suscriptor_id = fields.Char(related='prestamo_id.mobbex_suscriptor_id')
+	mobbex_suscriptor_sourceUrl = fields.Char(related='prestamo_id.mobbex_suscriptor_sourceUrl')
+	mobbex_suscriptor_subscriberUrl = fields.Char(related='prestamo_id.mobbex_suscriptor_subscriberUrl')
+	mobbex_suscripcion_suscriptor_confirm = fields.Boolean(related='prestamo_id.mobbex_suscripcion_suscriptor_confirm')
 
 	@api.model
 	def _mobbex_debit_execute(self):
@@ -52,7 +57,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 						execution_ids = execution_obj.search(cr, uid, [
 							('mobbex_cuota_id', '=', cuota_id.id),
 							('create_date', '>=', create_on),
-							('mobbex_status_code', '=', '400')
+							('mobbex_status_code', '=', '410')
 						])
 						if len(execution_ids) == 0:
 							cuota_id.mobbex_subscriber_execution()
