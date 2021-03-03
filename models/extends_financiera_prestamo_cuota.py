@@ -34,28 +34,30 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			if len(company_id.mobbex_id) > 0:
 				mobbex_id = company_id.mobbex_id
 				primer_fecha = fecha_actual - relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration)
-				segunda_fecha = primer_fecha - relativedelta.relativedelta(days=1)
-				tercer_fecha = primer_fecha - relativedelta.relativedelta(days=2)
-				cuarta_fecha = fecha_actual - relativedelta.relativedelta(days=mobbex_id.days_execute_after)
-				fechas_ejecucion = [
-					primer_fecha.__str__(),
-					segunda_fecha.__str__(),
-					tercer_fecha.__str__(),
-					cuarta_fecha.__str__(),
-				]
 				cuotas_obj = self.pool.get('financiera.prestamo.cuota')
 				cuotas_ids = cuotas_obj.search(cr, uid, [
 					('company_id', '=', company_id.id),
 					('prestamo_id.mobbex_debito_automatico', '=', True),
 					('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
-					('state', 'in', ('activa', 'judicial', 'incobrable')),
-					'|', ('fecha_vencimiento', 'in', fechas_ejecucion), 
-					('mobbex_program_execution_date', '=', fecha_actual),
+					('state', '=', 'activa'),
+					'|', ('fecha_vencimiento', '<=', primer_fecha.__str__()), 
+					('fecha_vencimiento', '<=', fecha_actual),
 				])
+				partner_execute_ids = []
+				create_on = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y, %H:%M:%S")
 				for _id in cuotas_ids:
 					cuota_id = cuotas_obj.browse(cr, uid, _id)
-					cuota_id.mobbex_subscriber_execution()
-					count += 1
+					if cuota_id.partner_id.id not in partner_execute_ids:
+						execution_obj = self.pool.get('financiera.mobbex.execution')
+						execution_ids = execution_obj.search(cr, uid, [
+							('mobbex_cuota_id', '=', cuota_id.id),
+							('create_date', '>=', create_on),
+							('mobbex_status_code', '=', '400')
+						])
+						if len(execution_ids) == 0:
+							cuota_id.mobbex_subscriber_execution()
+							partner_execute_ids.append(cuota_id.partner_id.id)
+							count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
 	
 	@api.one

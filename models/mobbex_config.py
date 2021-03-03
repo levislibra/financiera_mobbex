@@ -19,6 +19,7 @@ class FinancieraMobbexConfig(models.Model):
 	validate_id = fields.Boolean('Rechazar si el DNI no coincide contra la Tarjeta')
 	accept_no_funds = fields.Boolean('Aceptar tarjeta que no posea fondos')
 	days_execute_on_expiration = fields.Integer('Primer dia a debitar con respecto al vencimiento')
+	days_days_execution = fields.Integer('Cantidad de dias para intentar el debito', default=10)
 	days_execute_after = fields.Integer('Dias para nuevo intento de debito')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False)
 	journal_id = fields.Many2one('account.journal', 'Diario de Cobro', domain="[('type', 'in', ('cash', 'bank'))]")

@@ -60,6 +60,8 @@ class ExtendsFinancieraPrestamo(models.Model):
 		if self.mobbex_id.accept_no_funds:
 			features.append("accept_no_funds")
 		name = self.partner_id.name
+		if not self.partner_id.dni:
+			raise UserError("Error en el DNI o CUIT del cliente. Controle espacios en blanco delante y al final del mismo.")
 		name += " ("+self.partner_id.dni+"): "
 		name += self.name
 		body = {

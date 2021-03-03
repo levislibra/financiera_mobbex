@@ -19,9 +19,9 @@
         <form create="false" delete="false">
 					<header>
 						<!-- <button string="" name="action_name" type="object" class="oe_highlight"/> -->
-						<button name="button_mobbex_debit_execute" string="Ejecutar suscripciones" type="object"
+						<!-- <button name="button_mobbex_debit_execute" string="Ejecutar suscripciones" type="object"
 							confirm="Esta por ejecutar los debitos del mes actual hasta la fecha. Seguro que desea realizar esta accion?" 
-							groups="financiera_mobbex.ejecutar_suscripcion_manual"/>
+							groups="financiera_mobbex.ejecutar_suscripcion_manual"/> -->
 					</header>
           <sheet>
             <group>
@@ -37,7 +37,8 @@
 								<field name="validate_id"/>
 								<field name="accept_no_funds"/>
 								<field name="days_execute_on_expiration"/>
-								<field name="days_execute_after"/>
+								<!-- <field name="days_days_execution"/> -->
+								<!-- <field name="days_execute_after"/> -->
 								<field name="journal_id"/>
 								<field name="factura_electronica"/>
 							</group>
