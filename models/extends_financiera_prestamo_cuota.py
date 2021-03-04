@@ -49,7 +49,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					('fecha_vencimiento', '<=', fecha_actual),
 				])
 				partner_execute_ids = []
-				create_on = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y, %H:%M:%S")
+				create_on = datetime.now().replace(hour=3,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y, %H:%M:%S")
 				for _id in cuotas_ids:
 					cuota_id = cuotas_obj.browse(cr, uid, _id)
 					if cuota_id.partner_id.id not in partner_execute_ids:
