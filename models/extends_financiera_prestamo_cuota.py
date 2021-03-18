@@ -67,22 +67,23 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 	
 	@api.one
 	def mobbex_subscriber_execution(self):
-		url = URL_SUSCRIPTIONS+self.prestamo_id.mobbex_suscripcion_id
-		url += '/subscriber/'+self.prestamo_id.mobbex_suscriptor_id
-		url += '/execution/'
-		headers = {
-			'x-api-key': self.mobbex_id.api_key,
-			'x-access-token': self.mobbex_id.access_token,
-			'content-type': 'application/json',
-		}
-		body = {
-			'total': self.saldo,
-			'reference': str(self.id),
-		}
-		r = requests.post(url, data=json.dumps(body), headers=headers)
-		data = r.json()
-		if 'result' in data and data['result'] == True:
-			pass
+		if self.prestamo_id and self.prestamo_id.mobbex_suscripcion_id and self.prestamo_id.mobbex_suscriptor_id:
+			url = URL_SUSCRIPTIONS+self.prestamo_id.mobbex_suscripcion_id
+			url += '/subscriber/'+self.prestamo_id.mobbex_suscriptor_id
+			url += '/execution/'
+			headers = {
+				'x-api-key': self.mobbex_id.api_key,
+				'x-access-token': self.mobbex_id.access_token,
+				'content-type': 'application/json',
+			}
+			body = {
+				'total': self.saldo,
+				'reference': str(self.id),
+			}
+			r = requests.post(url, data=json.dumps(body), headers=headers)
+			data = r.json()
+			if 'result' in data and data['result'] == True:
+				pass
 
 	@api.one
 	def mobbex_read_execution(self, post):

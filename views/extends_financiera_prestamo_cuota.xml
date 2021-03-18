@@ -12,10 +12,10 @@
 					<page name="mobbex" string="Mobbex">
 						<group string="Mobbex - Suscripcion tarjeta de debito">
 							<field name="mobbex_id" invisible="1"/>
-							<!-- <field name="mobbex_program_execution_date"/>
+							<!-- <field name="mobbex_program_execution_date"/>-->
 							<label string="-"/>
 							<button name="mobbex_subscriber_execution" string="Ejecutar suscripcion" type="object"
-								confirm="Seguro que desea ejecutar el debito?" groups="financiera_mobbex.ejecutar_suscripcion_manual"/> -->
+								confirm="Seguro que desea ejecutar el debito?" groups="financiera_mobbex.ejecutar_suscripcion_manual"/>
 							<field name="mobbex_ejecucion_ids">
 								<tree create="false" edit="false" delete="false">
 									<field name="create_date" string="Fecha" readonly="1"/>
