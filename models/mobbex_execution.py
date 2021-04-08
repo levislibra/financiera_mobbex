@@ -21,3 +21,8 @@ class FinancieraMobbexExecution(models.Model):
 	mobbex_source_name = fields.Char('Tarjeta')
 	mobbex_source_type = fields.Char('Tipo de tajeta')
 	mobbex_source_number = fields.Char('Numero de tarjeta')
+
+
+	@api.one
+	def button_print_create_date(self):
+		print("create_date: ", self.create_date)

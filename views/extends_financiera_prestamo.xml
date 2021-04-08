@@ -17,10 +17,10 @@
 				<xpath expr="//page[@name='otra_informacion']" position='inside'>
 					<group string="Mobbex - Suscripcion tarjeta de debito">
 						<field name="mobbex_id" invisible="1"/>
-						<field name="mobbex_suscripcion_id" readonly="1"/>
-						<field name="mobbex_suscriptor_id" readonly="1"/>
-						<field name="mobbex_suscriptor_sourceUrl" widget="url" readonly="1"/>
-						<field name="mobbex_suscriptor_subscriberUrl" widget="url" readonly="1"/>
+						<field name="mobbex_suscripcion_id" readonly="0"/>
+						<field name="mobbex_suscriptor_id" readonly="0"/>
+						<field name="mobbex_suscriptor_sourceUrl" widget="url" readonly="0"/>
+						<field name="mobbex_suscriptor_subscriberUrl" widget="url" readonly="0"/>
 						<field name="mobbex_suscripcion_suscriptor_confirm" readonly="0"/>
 						<field name="mobbex_suscripcion_suscriptor_attempts" readonly="1"/>
 					</group>

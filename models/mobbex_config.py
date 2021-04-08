@@ -5,9 +5,11 @@ import logging
 from datetime import datetime, timedelta, date
 import requests
 import json
+import threading
 
 _logger = logging.getLogger(__name__)
 URL_SUSCRIPTIONS = 'https://api.mobbex.com/p/subscriptions/'
+TIME_BETWEEN_EXECUTION = 3
 class FinancieraMobbexConfig(models.Model):
 	_name = 'financiera.mobbex.config'
 
@@ -40,11 +42,12 @@ class FinancieraMobbexConfig(models.Model):
 				('company_id', '=', self.company_id.id),
 				('prestamo_id.mobbex_debito_automatico', '=', True),
 				('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
-				('state', 'in', ('activa', 'judicial', 'incobrable')),
+				('prestamo_id.state', '=', 'acreditado'),
+				('state', '=', 'activa'),
 				('fecha_vencimiento', '>=', fecha_inicial), 
 				('fecha_vencimiento', '<=', fecha_actual),
 			])
-			create_on = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y, %H:%M:%S")
+			create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0)
 			for _id in cuotas_ids:
 				cuota_id = cuotas_obj.browse(cr, uid, _id)
 				execution_obj = self.pool.get('financiera.mobbex.execution')
@@ -54,6 +57,6 @@ class FinancieraMobbexConfig(models.Model):
 					('mobbex_status_code', '=', '410')
 				])
 				if not len(execution_ids) > 0:
-					cuota_id.mobbex_subscriber_execution()
+					threading.Timer(count * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution()).start()
 					count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas manual: %s cuotas ejecutadas', count)

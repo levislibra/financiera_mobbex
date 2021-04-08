@@ -7,10 +7,11 @@ import logging
 
 import requests
 import json
+import threading
 
 _logger = logging.getLogger(__name__)
 URL_SUSCRIPTIONS = 'https://api.mobbex.com/p/subscriptions/'
-
+TIME_BETWEEN_EXECUTION = 5
 
 class ExtendsFinancieraPrestamoCuota(models.Model):
 	_inherit = 'financiera.prestamo.cuota' 
@@ -44,12 +45,14 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					('company_id', '=', company_id.id),
 					('prestamo_id.mobbex_debito_automatico', '=', True),
 					('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
+					('prestamo_id.state', '=', 'acreditado'),
 					('state', '=', 'activa'),
 					'|', ('fecha_vencimiento', '<=', primer_fecha.__str__()), 
 					('fecha_vencimiento', '<=', fecha_actual),
 				])
 				partner_execute_ids = []
-				create_on = datetime.now().replace(hour=3,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y, %H:%M:%S")
+				create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
+				print("create_on:: ", create_on)
 				for _id in cuotas_ids:
 					cuota_id = cuotas_obj.browse(cr, uid, _id)
 					if cuota_id.partner_id.id not in partner_execute_ids:
@@ -60,13 +63,14 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 							('mobbex_status_code', '=', '410')
 						])
 						if len(execution_ids) == 0:
-							cuota_id.mobbex_subscriber_execution()
+							threading.Timer(count * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution()).start()
 							partner_execute_ids.append(cuota_id.partner_id.id)
 							count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
 	
 	@api.one
 	def mobbex_subscriber_execution(self):
+		print("mobbex_subscriber_execution::NOS EJECUTAMOSSSSSSSSSSS")
 		if self.prestamo_id and self.prestamo_id.mobbex_suscripcion_id and self.prestamo_id.mobbex_suscriptor_id:
 			url = URL_SUSCRIPTIONS+self.prestamo_id.mobbex_suscripcion_id
 			url += '/subscriber/'+self.prestamo_id.mobbex_suscriptor_id
