@@ -58,6 +58,6 @@ class FinancieraMobbexConfig(models.Model):
 					('mobbex_status_code', '=', '410')
 				])
 				if not len(execution_ids) > 0:
-					threading.Timer(count * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
+					threading.Timer(count * TIME_BETWEEN_EXECUTION, lambda: cuota_id.mobbex_subscriber_execution()).start()
 					count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas manual: %s cuotas ejecutadas', count)
