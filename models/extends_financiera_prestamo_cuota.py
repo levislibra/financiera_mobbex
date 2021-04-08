@@ -51,7 +51,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					('fecha_vencimiento', '<=', fecha_actual),
 				])
 				partner_execute_ids = []
-				create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
+				create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y %H:%M:%S")
 				print("create_on:: ", create_on)
 				for _id in cuotas_ids:
 					cuota_id = cuotas_obj.browse(cr, uid, _id)
@@ -63,7 +63,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 							('mobbex_status_code', '=', '410')
 						])
 						if len(execution_ids) == 0:
-							threading.Timer(count * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution()).start()
+							threading.Timer(count * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
 							partner_execute_ids.append(cuota_id.partner_id.id)
 							count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)

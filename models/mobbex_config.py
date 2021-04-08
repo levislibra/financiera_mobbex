@@ -47,7 +47,8 @@ class FinancieraMobbexConfig(models.Model):
 				('fecha_vencimiento', '>=', fecha_inicial), 
 				('fecha_vencimiento', '<=', fecha_actual),
 			])
-			create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
+			create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y %H:%M:%S")
+			print("create_on:: ", create_on)
 			for _id in cuotas_ids:
 				cuota_id = cuotas_obj.browse(cr, uid, _id)
 				execution_obj = self.pool.get('financiera.mobbex.execution')
@@ -57,6 +58,6 @@ class FinancieraMobbexConfig(models.Model):
 					('mobbex_status_code', '=', '410')
 				])
 				if not len(execution_ids) > 0:
-					threading.Timer(count * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution()).start()
+					threading.Timer(count * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
 					count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas manual: %s cuotas ejecutadas', count)
