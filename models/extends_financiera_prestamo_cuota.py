@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from openerp import models, fields, api, tools
 from datetime import datetime, timedelta, date
 from dateutil import relativedelta
 import logging
@@ -11,7 +11,7 @@ import threading
 
 _logger = logging.getLogger(__name__)
 URL_SUSCRIPTIONS = 'https://api.mobbex.com/p/subscriptions/'
-TIME_BETWEEN_EXECUTION = 15
+TIME_BETWEEN_EXECUTION = 6.0
 
 class ExtendsFinancieraPrestamoCuota(models.Model):
 	_inherit = 'financiera.prestamo.cuota' 
@@ -62,31 +62,37 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 							('mobbex_status_code', '=', '410')
 						])
 						if len(execution_ids) == 0:
-							# print("threading.Timer: ", count*TIME_BETWEEN_EXECUTION)
-							threading.Timer(count * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution, []).start()
+							print("threading.Timer: ", (count+1)*TIME_BETWEEN_EXECUTION)
+							threading.Timer((count+1) * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
 							partner_execute_ids.append(cuota_id.partner_id.id)
 							count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
-	
-	@api.one
+
+	@api.multi
 	def mobbex_subscriber_execution(self):
-		if self.prestamo_id and self.prestamo_id.mobbex_suscripcion_id and self.prestamo_id.mobbex_suscriptor_id:
-			url = URL_SUSCRIPTIONS+self.prestamo_id.mobbex_suscripcion_id
-			url += '/subscriber/'+self.prestamo_id.mobbex_suscriptor_id
-			url += '/execution/'
-			headers = {
-				'x-api-key': self.mobbex_id.api_key,
-				'x-access-token': self.mobbex_id.access_token,
-				'content-type': 'application/json',
-			}
-			body = {
-				'total': self.saldo,
-				'reference': str(self.id),
-			}
-			r = requests.post(url, data=json.dumps(body), headers=headers)
-			data = r.json()
-			if 'result' in data and data['result'] == True:
-				pass
+		with api.Environment.manage():
+			# As this function is in a new thread, I need to open a new cursor, because the old one may be closed
+			new_cr = self.pool.cursor()
+			self = self.with_env(self.env(cr=new_cr))
+			# scheduler_cron = self.sudo().env.ref('procurement.ir_cron_scheduler_action')
+			if self.prestamo_id and self.prestamo_id.mobbex_suscripcion_id and self.prestamo_id.mobbex_suscriptor_id:
+				url = URL_SUSCRIPTIONS+self.prestamo_id.mobbex_suscripcion_id
+				url += '/subscriber/'+self.prestamo_id.mobbex_suscriptor_id
+				url += '/execution/'
+				headers = {
+					'x-api-key': self.mobbex_id.api_key,
+					'x-access-token': self.mobbex_id.access_token,
+					'content-type': 'application/json',
+				}
+				body = {
+					'total': self.saldo,
+					'reference': str(self.id),
+				}
+				r = requests.post(url, data=json.dumps(body), headers=headers)
+				data = r.json()
+				if 'result' in data and data['result'] == True:
+					pass
+			new_cr.close()
 
 	@api.one
 	def mobbex_read_execution(self, post):
