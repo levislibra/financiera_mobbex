@@ -47,7 +47,7 @@ class FinancieraMobbexConfig(models.Model):
 				('fecha_vencimiento', '>=', fecha_inicial), 
 				('fecha_vencimiento', '<=', fecha_actual),
 			])
-			create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0)
+			create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
 			for _id in cuotas_ids:
 				cuota_id = cuotas_obj.browse(cr, uid, _id)
 				execution_obj = self.pool.get('financiera.mobbex.execution')
