@@ -25,6 +25,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 	mobbex_suscriptor_sourceUrl = fields.Char(related='prestamo_id.mobbex_suscriptor_sourceUrl')
 	mobbex_suscriptor_subscriberUrl = fields.Char(related='prestamo_id.mobbex_suscriptor_subscriberUrl')
 	mobbex_suscripcion_suscriptor_confirm = fields.Boolean(related='prestamo_id.mobbex_suscripcion_suscriptor_confirm')
+	mobbex_stop_debit = fields.Boolean('Stop debit')
 
 	@api.model
 	def _mobbex_debit_execute(self):
@@ -47,6 +48,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
 					('prestamo_id.state', '=', 'acreditado'),
 					('state', '=', 'activa'),
+					('mobbex_stop_debit', '=', False),
 					'|', ('fecha_vencimiento', '<=', primer_fecha.__str__()), 
 					('fecha_vencimiento', '<=', fecha_actual),
 				])
