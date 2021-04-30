@@ -33,6 +33,7 @@
 				'views/extends_res_company.xml',
 				'views/extends_financiera_prestamo.xml',
 				'views/extends_financiera_prestamo_cuota.xml',
+				'wizards/mobbex_execution_wizard.xml',
 				'data/ir_cron.xml',
     ],
     # only loaded in demonstration mode

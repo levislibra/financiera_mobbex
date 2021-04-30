@@ -5,7 +5,7 @@
       <field name="name">financiera.mobbex.execution.tree</field>
       <field name="model">financiera.mobbex.execution</field>
       <field name="arch" type="xml">
-        <tree create="false" delete="false">
+        <tree create="true" delete="true">
 					<field name="create_date" string="Fecha" readonly="1"/>
 					<field name="partner_id" readonly="1"/>
           <field name="mobbex_source_name" readonly="1"/>
@@ -19,6 +19,29 @@
 					<field name="mobbex_status_message" readonly="1"/>
           <field name="company_id" groups="base.group_erp_manager"/>
         </tree>
+      </field>
+    </record>
+
+		 <!-- Filter Execution -->
+
+		 <record model="ir.ui.view" id="filter_mobbex_execution_view">
+      <field name="name">financiera.mobbex.execution.filter</field>
+      <field name="model">financiera.mobbex.execution</field>
+      <field name="arch" type="xml">
+        <search>
+					<filter string="Ultimos 7 dias" name="last_7_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d') )]"/>
+          <filter string="Hoy" name="hoy" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+					<filter string="Hoy a la mañana" name="manana" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(11,59,59)))]"/>
+          <filter string="Hoy a la tarde" name="tarde" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(12,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(18,59,59)))]"/>
+          <filter string="Hoy a la noche" name="noche" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(19,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+          <separator/>
+					<filter name="group_mobbex_status_code" string="Codigo" icon="terp-partner" context="{'group_by':'mobbex_status_code'}"/>
+					<separator/>
+          <field name="partner_id"/>
+          <field name="mobbex_status_code"/>
+          <field name="create_date"/>
+					<field name="company_id" groups="base.group_erp_manager"/>
+        </search>
       </field>
     </record>
 
