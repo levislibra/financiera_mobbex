@@ -54,7 +54,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 			'x-access-token': self.mobbex_id.access_token,
 			'content-type': 'application/json',
 		}
-		features = []
+		features = ["no_email"]
 		if self.mobbex_id.validate_id:
 			features.append("validate_id")
 		if self.mobbex_id.accept_no_funds:
