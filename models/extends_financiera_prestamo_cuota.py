@@ -60,7 +60,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					if cuota_id.partner_id.id not in partner_execute_ids:
 						execution_obj = self.pool.get('financiera.mobbex.execution')
 						execution_ids = []
-						if today.day >= 11 and today.day <= 26:
+						if today.day >= 16 and today.day <= 26:
 							execution_ids = execution_obj.search(cr, uid, [
 								('mobbex_cuota_id.prestamo_id', '=', cuota_id.prestamo_id.id),
 								('create_date', '>=', create_on),
