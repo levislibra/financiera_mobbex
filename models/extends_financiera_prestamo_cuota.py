@@ -67,7 +67,8 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 						# 		('mobbex_status_code', '=', '410')
 						# 	])
 						if len(execution_ids) == 0:
-							threading.Timer((count+1) * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
+							# threading.Timer((count+1) * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
+							cuota_id.mobbex_subscriber_execution()
 							partner_execute_ids.append(cuota_id.partner_id.id)
 							count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
