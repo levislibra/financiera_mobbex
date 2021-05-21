@@ -46,6 +46,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 			if not self.mobbex_suscripcion_id or not self.mobbex_suscriptor_id:
 				self.mobbex_create_suscription()
 				self.mobbex_create_suscriptor()
+				self.mobbex_suscripcion_suscriptor_confirm = False
 
 	@api.one
 	def mobbex_create_suscription(self):
