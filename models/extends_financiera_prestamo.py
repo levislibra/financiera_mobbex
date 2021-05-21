@@ -43,8 +43,9 @@ class ExtendsFinancieraPrestamo(models.Model):
 	def enviar_a_autorizado(self):
 		super(ExtendsFinancieraPrestamo, self).enviar_a_autorizado()
 		if self.mobbex_debito_automatico:
-			self.mobbex_create_suscription()
-			self.mobbex_create_suscriptor()
+			if not self.mobbex_suscripcion_id or not self.mobbex_suscriptor_id:
+				self.mobbex_create_suscription()
+				self.mobbex_create_suscriptor()
 
 	@api.one
 	def mobbex_create_suscription(self):

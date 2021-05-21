@@ -21,5 +21,6 @@ class MobbexExecutionWizard(models.TransientModel):
 		for _id in active_ids:
 			execution_id = self.env['financiera.mobbex.execution'].browse(_id)
 			cuota_id = execution_id.mobbex_cuota_id
-			threading.Timer((count+1) * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
+			# threading.Timer((count+1) * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
+			cuota_id.mobbex_subscriber_execution()
 			count += 1
