@@ -73,6 +73,38 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 							count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
 
+	@api.model
+	def _mobbex_debit_execute_company(self, arg_id):
+		cr = self.env.cr
+		uid = self.env.uid
+		fecha_actual = date.today()
+		_logger.info('Mobbex: iniciando debito de cuotas de la Empresa %s', arg_id)
+		count = 0
+		company_obj = self.pool.get('res.company')
+		company_id = company_obj.browse(cr, uid, arg_id)
+		if len(company_id.mobbex_id) > 0:
+			mobbex_id = company_id.mobbex_id
+			primer_fecha = fecha_actual - relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration)
+			cuotas_obj = self.pool.get('financiera.prestamo.cuota')
+			cuotas_ids = cuotas_obj.search(cr, uid, [
+				('company_id', '=', company_id.id),
+				('prestamo_id.mobbex_debito_automatico', '=', True),
+				('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
+				('prestamo_id.state', '=', 'acreditado'),
+				('state', '=', 'activa'),
+				('mobbex_stop_debit', '=', False),
+				'|', ('fecha_vencimiento', '<=', primer_fecha.__str__()), 
+				('fecha_vencimiento', '<=', fecha_actual),
+			])
+			partner_execute_ids = []
+			for _id in cuotas_ids:
+				cuota_id = cuotas_obj.browse(cr, uid, _id)
+				if cuota_id.partner_id.id not in partner_execute_ids:
+					cuota_id.mobbex_subscriber_execution()
+					partner_execute_ids.append(cuota_id.partner_id.id)
+					count += 1
+		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
+
 	@api.multi
 	def mobbex_subscriber_execution(self):
 		with api.Environment.manage():
@@ -128,6 +160,14 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 		self.mobbex_ejecucion_ids = [execution_id.id]
 		if execution_id.mobbex_status_code == '200':
 			self.mobbex_cobrar_cuota(execution_id)
+			fecha_actual = date.today()
+			if self.cuota_previa_id and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.fecha_vencieminto <= fecha_actual:
+				print("enviarmos a cobrar cuota previa: ", self.cuota)
+				self.cuota_previa_id.mobbex_subscriber_execution()
+			if self.cuota_proxima_id and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.fecha_vencimiento <= fecha_actual:
+				print("enviamos a cobrar cuota proxima: ", self.cuota_proxima_id.name)
+				self.cuota_proxima_id.mobbex_subscriber_execution()
+			
 
 	@api.one
 	def mobbex_cobrar_cuota(self, execution_id):

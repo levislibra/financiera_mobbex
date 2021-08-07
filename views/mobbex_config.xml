@@ -18,10 +18,6 @@
       <field name="arch" type="xml">
         <form create="false" delete="false">
 					<header>
-						<!-- <button string="" name="action_name" type="object" class="oe_highlight"/> -->
-						<!-- <button name="button_mobbex_debit_execute" string="Ejecutar suscripciones" type="object"
-							confirm="Esta por ejecutar los debitos del mes actual hasta la fecha. Seguro que desea realizar esta accion?" 
-							groups="financiera_mobbex.ejecutar_suscripcion_manual"/> -->
 					</header>
           <sheet>
             <group>
@@ -43,6 +39,36 @@
 								<field name="factura_electronica"/>
 							</group>
             </group>
+						<notebook>
+							<page name="config_execute" string="Configuracion de ejecuciones">
+								<field name="config_execute_ids">
+									<tree>
+										<field name="name"/>
+										<field name="activo"/>
+										<field name="interval_number"/>
+										<field name="interval_type"/>
+										<field name="numbercall"/>
+										<field name="nextcall"/>
+										<field name="priority"/>
+										<field name="ir_cron_id"/>
+										<field name="company_id" groups="base.group_erp_manager"/>
+									</tree>
+									<form>
+										<sheet>
+											<group>
+												<field name="name"/>
+												<field name="activo"/>
+												<field name="interval_number"/>
+												<field name="interval_type"/>
+												<field name="numbercall"/>
+												<field name="nextcall"/>
+												<field name="priority"/>		
+											</group>
+										</sheet>
+									</form>
+								</field>
+							</page>
+						</notebook>
           </sheet>
         </form>
       </field>

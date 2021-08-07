@@ -3,5 +3,8 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 user_financiera_mobbex_config,financiera.mobbex.config,model_financiera_mobbex_config,financiera_mobbex.user,1,0,0,0
 manager_financiera_mobbex_config,financiera.mobbex.config,model_financiera_mobbex_config,financiera_mobbex.manager,1,1,1,0
 
+user_financiera_mobbex_config_execute,financiera.mobbex.config.execute,model_financiera_mobbex_config_execute,financiera_mobbex.user,1,0,0,0
+manager_financiera_mobbex_config_execute,financiera.mobbex.config.execute,model_financiera_mobbex_config_execute,financiera_mobbex.manager,1,1,1,1
+
 user_financiera_mobbex_execution,financiera.mobbex.execution,model_financiera_mobbex_execution,financiera_mobbex.user,1,1,1,0
 manager_financiera_mobbex_execution,financiera.mobbex.execution,model_financiera_mobbex_execution,financiera_mobbex.manager,1,1,1,0
