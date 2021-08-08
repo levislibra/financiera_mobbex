@@ -10,7 +10,7 @@ class FinancieraMobbexConfigExecute(models.Model):
 	name = fields.Char('Nombre')
 	config_id = fields.Many2one('financiera.mobbex.config', 'Config')
 	activo = fields.Boolean('Activo')
-	priority = fields.Integer('Prioridad')
+	priority = fields.Integer('Prioridad', help='0 para la maxima prioridad y 10 para la menor')
 	interval_number = fields.Integer('Número de intervalos', help='Repetir cada x.')
 	interval_type = fields.Selection([
 		# ('minutes', 'Minutos'), ('hours', 'Horas'), 
@@ -19,10 +19,11 @@ class FinancieraMobbexConfigExecute(models.Model):
 	nextcall = fields.Datetime('Siguiente fecha de ejecución')
 	ir_cron_id = fields.Many2one('ir.cron', 'Cron')
 	company_id = fields.Many2one('res.company', 'Empresa', default=lambda self: self.env['res.company']._company_default_get('financiera.mobbex.config.execute'))
+	company_name = fields.Char('Nombre de la Empresa', related='company_id.name', readonly=True)
 
 	def get_values(self):
 		values = {
-			'name': self.name,
+			'name': self.company_name + ' - ' + self.name,
 			'user_id': 1,
 			'priority': self.priority,
 			'active': self.activo,

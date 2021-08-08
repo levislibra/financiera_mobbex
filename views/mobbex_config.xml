@@ -57,15 +57,15 @@
 									<form>
 										<sheet>
 											<group>
-												<field name="name"/>
+												<field name="name" required="1"/>
 												<field name="activo"/>
-												<field name="interval_number"/>
-												<field name="interval_type"/>
-												<field name="numbercall"/>
+												<field name="interval_number" required="1"/>
+												<field name="interval_type" required="1"/>
+												<field name="numbercall" required="1"/>
 												<label string=" "/>
 												<button string="Actualizar fecha" name="update_nextcall" type="object" class="oe_highlight"/>
-												<field name="nextcall"/>
-												<field name="priority"/>		
+												<field name="nextcall" required="1"/>
+												<field name="priority" required="1"/>
 											</group>
 										</sheet>
 									</form>
