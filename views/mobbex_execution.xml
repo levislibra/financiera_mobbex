@@ -30,6 +30,9 @@
       <field name="arch" type="xml">
         <search>
 					<filter string="Ultimos 7 dias" name="last_7_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 15 dias" name="last_15_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=15)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 30 dias" name="last_30_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 60 dias" name="last_60_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=60)).strftime('%%Y-%%m-%%d') )]"/>
           <filter string="Hoy" name="hoy" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
 					<filter string="Hoy a la mañana" name="manana" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(11,59,59)))]"/>
           <filter string="Hoy a la tarde" name="tarde" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(12,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(18,59,59)))]"/>

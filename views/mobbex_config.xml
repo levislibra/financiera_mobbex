@@ -33,14 +33,14 @@
 								<field name="validate_id"/>
 								<field name="accept_no_funds"/>
 								<field name="days_execute_on_expiration"/>
-								<!-- <field name="days_days_execution"/> -->
-								<!-- <field name="days_execute_after"/> -->
 								<field name="journal_id"/>
 								<field name="factura_electronica"/>
 							</group>
             </group>
 						<notebook>
 							<page name="config_execute" string="Configuracion de ejecuciones">
+								<label string=" "/>
+								<button string="Actualizar fechas" name="update_nextcall" type="object" class="oe_highlight"/>
 								<field name="config_execute_ids">
 									<tree>
 										<field name="name"/>
@@ -49,6 +49,7 @@
 										<field name="interval_type"/>
 										<field name="numbercall"/>
 										<field name="nextcall"/>
+										<button string="Actualizar fecha" name="update_nextcall" type="object" class="oe_highlight"/>
 										<field name="priority"/>
 										<field name="ir_cron_id"/>
 										<field name="company_id" groups="base.group_erp_manager"/>
@@ -61,6 +62,8 @@
 												<field name="interval_number"/>
 												<field name="interval_type"/>
 												<field name="numbercall"/>
+												<label string=" "/>
+												<button string="Actualizar fecha" name="update_nextcall" type="object" class="oe_highlight"/>
 												<field name="nextcall"/>
 												<field name="priority"/>		
 											</group>

@@ -65,6 +65,7 @@ class FinancieraMobbexConfigExecute(models.Model):
 		self.sudo().ir_cron_id.unlink()
 		return super(FinancieraMobbexConfigExecute, self).unlink()
 
-	@api.depends('ir_cron_id.nextcall')
+	@api.one
 	def update_nextcall(self):
-		self.nextcall = self.sudo().ir_cron_id.nextcall
+		if len(self.ir_cron_id) > 0:
+			self.nextcall = self.sudo().ir_cron_id.nextcall
