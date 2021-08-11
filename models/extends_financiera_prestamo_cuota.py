@@ -133,40 +133,41 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 
 	@api.one
 	def mobbex_read_execution(self, post):
-		values = {
-			'company_id': self.company_id.id,
-		}
-		if 'data[payment][status][code]' in post:
-			values['mobbex_status_code'] = post['data[payment][status][code]']
-		if 'data[payment][status][text]' in post:
-			values['mobbex_status_text'] = post['data[payment][status][text]']
-		if 'data[payment][status][message]' in post:
-			values['mobbex_status_message'] = post['data[payment][status][message]']
-		if 'data[payment][total]' in post:
-			values['mobbex_total'] = post['data[payment][total]']
-		if 'data[payment][currency][code]' in post:
-			values['mobbex_currency_code'] = post['data[payment][currency][code]']
-		if 'data[payment][currency][text]' in post:
-			values['mobbex_currency_text'] = post['data[payment][currency][text]']
-		if 'data[payment][source][name]' in post:
-			values['mobbex_source_name'] = post['data[payment][source][name]']
-		if 'data[payment][source][type]' in post:
-			values['mobbex_source_type'] = post['data[payment][source][type]']
-		if 'data[payment][source][number]' in post:
-			values['mobbex_source_number'] = post['data[payment][source][type]']
-		if 'data[execution][uid]' in post:
-			values['mobbex_ejecucion_id'] = post['data[execution][uid]']
-		execution_id = self.env['financiera.mobbex.execution'].create(values)
-		self.mobbex_ejecucion_ids = [execution_id.id]
-		if execution_id.mobbex_status_code == '200':
-			self.mobbex_cobrar_cuota(execution_id)
-			fecha_actual = date.today()
-			if self.cuota_previa_id and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.fecha_vencieminto <= fecha_actual:
-				print("enviarmos a cobrar cuota previa: ", self.cuota)
-				self.cuota_previa_id.mobbex_subscriber_execution()
-			if self.cuota_proxima_id and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.fecha_vencimiento <= fecha_actual:
-				print("enviamos a cobrar cuota proxima: ", self.cuota_proxima_id.name)
-				self.cuota_proxima_id.mobbex_subscriber_execution()
+		if self.state in ('activa','judicial','incobrable') and self.saldo > 0:
+			values = {
+				'company_id': self.company_id.id,
+			}
+			if 'data[payment][status][code]' in post:
+				values['mobbex_status_code'] = post['data[payment][status][code]']
+			if 'data[payment][status][text]' in post:
+				values['mobbex_status_text'] = post['data[payment][status][text]']
+			if 'data[payment][status][message]' in post:
+				values['mobbex_status_message'] = post['data[payment][status][message]']
+			if 'data[payment][total]' in post:
+				values['mobbex_total'] = post['data[payment][total]']
+			if 'data[payment][currency][code]' in post:
+				values['mobbex_currency_code'] = post['data[payment][currency][code]']
+			if 'data[payment][currency][text]' in post:
+				values['mobbex_currency_text'] = post['data[payment][currency][text]']
+			if 'data[payment][source][name]' in post:
+				values['mobbex_source_name'] = post['data[payment][source][name]']
+			if 'data[payment][source][type]' in post:
+				values['mobbex_source_type'] = post['data[payment][source][type]']
+			if 'data[payment][source][number]' in post:
+				values['mobbex_source_number'] = post['data[payment][source][type]']
+			if 'data[execution][uid]' in post:
+				values['mobbex_ejecucion_id'] = post['data[execution][uid]']
+			execution_id = self.env['financiera.mobbex.execution'].create(values)
+			self.mobbex_ejecucion_ids = [execution_id.id]
+			if execution_id.mobbex_status_code == '200':
+				self.mobbex_cobrar_cuota(execution_id)
+				fecha_actual = date.today()
+				if self.cuota_previa_id and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.fecha_vencieminto <= fecha_actual:
+					print("enviarmos a cobrar cuota previa: ", self.cuota)
+					self.cuota_previa_id.mobbex_subscriber_execution()
+				if self.cuota_proxima_id and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.fecha_vencimiento <= fecha_actual:
+					print("enviamos a cobrar cuota proxima: ", self.cuota_proxima_id.name)
+					self.cuota_proxima_id.mobbex_subscriber_execution()
 			
 
 	@api.one
