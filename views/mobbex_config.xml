@@ -49,6 +49,7 @@
 										<field name="interval_type"/>
 										<field name="numbercall"/>
 										<field name="nextcall"/>
+										<field name="amount"/>
 										<button string="Actualizar fecha" name="update_nextcall" type="object" class="oe_highlight"/>
 										<field name="priority"/>
 										<field name="ir_cron_id"/>

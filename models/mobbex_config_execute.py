@@ -17,6 +17,7 @@ class FinancieraMobbexConfigExecute(models.Model):
 		('work_days', 'Días laborables'), ('days', 'Días'), ('weeks', 'Semanas'), ('months', 'Meses')], 'Unidad de intervalo')
 	numbercall = fields.Integer('Número de ejecuciones', help='Cuantas veces se llama a este metodos, un numero negativo indica sin limite.')
 	nextcall = fields.Datetime('Siguiente fecha de ejecución')
+	amount = fields.Float('Monto', help='Cero o negativo para ejecutar el saldo de la cuota.')
 	ir_cron_id = fields.Many2one('ir.cron', 'Cron')
 	company_id = fields.Many2one('res.company', 'Empresa', default=lambda self: self.env['res.company']._company_default_get('financiera.mobbex.config.execute'))
 	company_name = fields.Char('Nombre de la Empresa', related='company_id.name', readonly=True)
@@ -34,7 +35,7 @@ class FinancieraMobbexConfigExecute(models.Model):
 			'nextcall': self.nextcall,
 			'model': 'financiera.prestamo.cuota',
 			'function': '_mobbex_debit_execute_company',
-			'args': '(%s,)'%(str(self.company_id.id)),
+			'args': '(%s,%s)'%((str(self.company_id.id)), str(self.amount)),
 		}
 		return values
 

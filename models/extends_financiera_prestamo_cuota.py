@@ -27,54 +27,48 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 	mobbex_suscripcion_suscriptor_confirm = fields.Boolean(related='prestamo_id.mobbex_suscripcion_suscriptor_confirm')
 	mobbex_stop_debit = fields.Boolean('Stop debit')
 
-	@api.model
-	def _mobbex_debit_execute(self):
-		cr = self.env.cr
-		uid = self.env.uid
-		fecha_actual = date.today()
-		company_obj = self.pool.get('res.company')
-		comapny_ids = company_obj.search(cr, uid, [])
-		_logger.info('Mobbex: iniciando debito de cuotas.')
-		count = 0
-		for _id in comapny_ids:
-			company_id = company_obj.browse(cr, uid, _id)
-			if len(company_id.mobbex_id) > 0:
-				mobbex_id = company_id.mobbex_id
-				primer_fecha = fecha_actual - relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration)
-				cuotas_obj = self.pool.get('financiera.prestamo.cuota')
-				cuotas_ids = cuotas_obj.search(cr, uid, [
-					('company_id', '=', company_id.id),
-					('prestamo_id.mobbex_debito_automatico', '=', True),
-					('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
-					('prestamo_id.state', '=', 'acreditado'),
-					('state', '=', 'activa'),
-					('mobbex_stop_debit', '=', False),
-					'|', ('fecha_vencimiento', '<=', primer_fecha.__str__()), 
-					('fecha_vencimiento', '<=', fecha_actual),
-				])
-				partner_execute_ids = []
-				create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y %H:%M:%S")
-				today = date.today()
-				for _id in cuotas_ids:
-					cuota_id = cuotas_obj.browse(cr, uid, _id)
-					if cuota_id.partner_id.id not in partner_execute_ids:
-						execution_obj = self.pool.get('financiera.mobbex.execution')
-						execution_ids = []
-						# if today.day >= 16 and today.day <= 26:
-						# 	execution_ids = execution_obj.search(cr, uid, [
-						# 		('mobbex_cuota_id.prestamo_id', '=', cuota_id.prestamo_id.id),
-						# 		('create_date', '>=', create_on),
-						# 		('mobbex_status_code', '=', '410')
-						# 	])
-						if len(execution_ids) == 0:
-							# threading.Timer((count+1) * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
-							cuota_id.mobbex_subscriber_execution()
-							partner_execute_ids.append(cuota_id.partner_id.id)
-							count += 1
-		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
+	# @api.model
+	# def _mobbex_debit_execute(self):
+	# 	cr = self.env.cr
+	# 	uid = self.env.uid
+	# 	fecha_actual = date.today()
+	# 	company_obj = self.pool.get('res.company')
+	# 	comapny_ids = company_obj.search(cr, uid, [])
+	# 	_logger.info('Mobbex: iniciando debito de cuotas.')
+	# 	count = 0
+	# 	for _id in comapny_ids:
+	# 		company_id = company_obj.browse(cr, uid, _id)
+	# 		if len(company_id.mobbex_id) > 0:
+	# 			mobbex_id = company_id.mobbex_id
+	# 			primer_fecha = fecha_actual - relativedelta.relativedelta(days=mobbex_id.days_execute_on_expiration)
+	# 			cuotas_obj = self.pool.get('financiera.prestamo.cuota')
+	# 			cuotas_ids = cuotas_obj.search(cr, uid, [
+	# 				('company_id', '=', company_id.id),
+	# 				('prestamo_id.mobbex_debito_automatico', '=', True),
+	# 				('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
+	# 				('prestamo_id.state', '=', 'acreditado'),
+	# 				('state', '=', 'activa'),
+	# 				('mobbex_stop_debit', '=', False),
+	# 				'|', ('fecha_vencimiento', '<=', primer_fecha.__str__()), 
+	# 				('fecha_vencimiento', '<=', fecha_actual),
+	# 			])
+	# 			partner_execute_ids = []
+	# 			create_on = datetime.now().replace(hour=4,minute=0,second=0,microsecond=0).strftime("%m/%d/%Y %H:%M:%S")
+	# 			today = date.today()
+	# 			for _id in cuotas_ids:
+	# 				cuota_id = cuotas_obj.browse(cr, uid, _id)
+	# 				if cuota_id.partner_id.id not in partner_execute_ids:
+	# 					execution_obj = self.pool.get('financiera.mobbex.execution')
+	# 					execution_ids = []
+	# 					if len(execution_ids) == 0:
+	# 						# threading.Timer((count+1) * TIME_BETWEEN_EXECUTION, cuota_id.mobbex_subscriber_execution).start()
+	# 						cuota_id.mobbex_subscriber_execution()
+	# 						partner_execute_ids.append(cuota_id.partner_id.id)
+	# 						count += 1
+	# 	_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
 
 	@api.model
-	def _mobbex_debit_execute_company(self, arg_id):
+	def _mobbex_debit_execute_company(self, arg_id, arg_amount=None):
 		cr = self.env.cr
 		uid = self.env.uid
 		fecha_actual = date.today()
@@ -100,13 +94,16 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			for _id in cuotas_ids:
 				cuota_id = cuotas_obj.browse(cr, uid, _id)
 				if cuota_id.partner_id.id not in partner_execute_ids:
-					cuota_id.mobbex_subscriber_execution()
+					amount = None
+					if arg_amount:
+						amount = float(arg_amount)
+					cuota_id.mobbex_subscriber_execution(amount)
 					partner_execute_ids.append(cuota_id.partner_id.id)
 					count += 1
 		_logger.info('Mobbex: finalizo el debito de cuotas: %s cuotas ejecutadas', count)
 
 	@api.multi
-	def mobbex_subscriber_execution(self):
+	def mobbex_subscriber_execution(self, monto=None):
 		with api.Environment.manage():
 			# As this function is in a new thread, I need to open a new cursor, because the old one may be closed
 			new_cr = self.pool.cursor()
@@ -121,9 +118,13 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					'x-access-token': self.mobbex_id.access_token,
 					'content-type': 'application/json',
 				}
+				total = self.saldo
+				if monto:
+					total = min(monto, self.saldo)
+				reference = str(self.id) + '_' + str(len(self.payment_ids))
 				body = {
-					'total': self.saldo,
-					'reference': str(self.id),
+					'total': total,
+					'reference': reference,
 				}
 				r = requests.post(url, data=json.dumps(body), headers=headers)
 				data = r.json()
@@ -162,10 +163,10 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			if execution_id.mobbex_status_code == '200':
 				self.mobbex_cobrar_cuota(execution_id)
 				fecha_actual = date.today()
-				if self.cuota_previa_id and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.fecha_vencieminto <= fecha_actual:
+				if self.cuota_previa_id and not self.cuota_previo_id.mobbex_stop_debit and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.fecha_vencieminto <= fecha_actual:
 					print("enviarmos a cobrar cuota previa: ", self.cuota)
 					self.cuota_previa_id.mobbex_subscriber_execution()
-				if self.cuota_proxima_id and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.fecha_vencimiento <= fecha_actual:
+				if self.cuota_proxima_id and not self.cuota_proxima_id.mobbex_stop_debit and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.fecha_vencimiento <= fecha_actual:
 					print("enviamos a cobrar cuota proxima: ", self.cuota_proxima_id.name)
 					self.cuota_proxima_id.mobbex_subscriber_execution()
 			
