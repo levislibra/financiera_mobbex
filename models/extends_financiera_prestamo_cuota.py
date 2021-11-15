@@ -137,6 +137,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 		if self.state in ('activa','judicial','incobrable') and self.saldo > 0:
 			values = {
 				'company_id': self.company_id.id,
+				# 'mobbex_cuota_id': self.id,
 			}
 			if 'data[payment][status][code]' in post:
 				values['mobbex_status_code'] = post['data[payment][status][code]']
@@ -163,7 +164,10 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			if execution_id.mobbex_status_code == '200':
 				self.mobbex_cobrar_cuota(execution_id)
 				fecha_actual = date.today()
-				if self.cuota_previa_id and not self.cuota_previo_id.mobbex_stop_debit and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.fecha_vencieminto <= fecha_actual:
+				# si saldo es menor a un peso (por problemas de redondeo)
+				if self.saldo > 0:
+					self.mobbex_subscriber_execution()
+				if self.cuota_previa_id and not self.cuota_previa_id.mobbex_stop_debit and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.fecha_vencieminto <= fecha_actual:
 					print("enviarmos a cobrar cuota previa: ", self.cuota)
 					self.cuota_previa_id.mobbex_subscriber_execution()
 				if self.cuota_proxima_id and not self.cuota_proxima_id.mobbex_stop_debit and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.fecha_vencimiento <= fecha_actual:
