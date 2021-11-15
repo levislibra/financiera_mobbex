@@ -167,10 +167,10 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 				# si saldo es menor a un peso (por problemas de redondeo)
 				if self.saldo > 0:
 					self.mobbex_subscriber_execution()
-				if self.cuota_previa_id and not self.cuota_previa_id.mobbex_stop_debit and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.fecha_vencieminto <= fecha_actual:
+				if self.cuota_previa_id and not self.cuota_previa_id.mobbex_stop_debit and self.cuota_previa_id.saldo > 0 and self.state_mora in ['moraTemprana', 'moraMedia', 'moraTardia', 'incobrable']:
 					print("enviarmos a cobrar cuota previa: ", self.cuota)
 					self.cuota_previa_id.mobbex_subscriber_execution()
-				if self.cuota_proxima_id and not self.cuota_proxima_id.mobbex_stop_debit and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.fecha_vencimiento <= fecha_actual:
+				if self.cuota_proxima_id and not self.cuota_proxima_id.mobbex_stop_debit and self.cuota_proxima_id.saldo > 0 and self.state_mora != ['moraTemprana', 'moraMedia', 'moraTardia', 'incobrable']:
 					print("enviamos a cobrar cuota proxima: ", self.cuota_proxima_id.name)
 					self.cuota_proxima_id.mobbex_subscriber_execution()
 			
