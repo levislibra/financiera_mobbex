@@ -1,0 +1,96 @@
+<openerp>
+  <data>
+
+		<record model="ir.ui.view" id="mobbex_orden_pago_tree">
+      <field name="name">financiera.mobbex.orden.pago.tree</field>
+      <field name="model">financiera.mobbex.orden.pago</field>
+      <field name="arch" type="xml">
+        <tree create="true" delete="true">
+					<field name="create_date" string="Fecha" readonly="1"/>
+					<field name="name" readonly="1"/>
+					<field name="partner_id" readonly="1"/>
+          <field name="total" readonly="1"/>
+					<field name="state" readonly="1"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
+        </tree>
+      </field>
+    </record>
+
+		 <!-- Filter Execution -->
+
+		 <record model="ir.ui.view" id="filter_mobbex_orden_pago_view">
+      <field name="name">financiera.mobbex.orden.pago.filter</field>
+      <field name="model">financiera.mobbex.orden.pago</field>
+      <field name="arch" type="xml">
+        <search>
+					<filter string="Ultimos 7 dias" name="last_7_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 15 dias" name="last_15_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=15)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 30 dias" name="last_30_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 60 dias" name="last_60_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=60)).strftime('%%Y-%%m-%%d') )]"/>
+          <filter string="Hoy" name="hoy" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+					<filter string="Hoy a la mañana" name="manana" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(11,59,59)))]"/>
+          <filter string="Hoy a la tarde" name="tarde" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(12,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(18,59,59)))]"/>
+          <filter string="Hoy a la noche" name="noche" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(19,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+          <separator/>
+					<filter name="group_mobbex_status_code" string="Estado" icon="terp-partner" context="{'group_by':'state'}"/>
+					<separator/>
+          <field name="partner_id"/>
+					<field name="company_id" groups="base.group_erp_manager"/>
+        </search>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mobbex_orden_pago_form">
+      <field name="name">financiera.mobbex.orden.pago.form</field>
+      <field name="model">financiera.mobbex.orden.pago</field>
+      <field name="arch" type="xml">
+        <form create="false" delete="false">
+					<header>
+						<button string="Crear Orden de Pago" states='borrador' name="mobbex_crear_orden_pago" type="object" class="oe_highlight"/>
+						<field name="state" widget="statusbar"/>
+					</header>
+          <sheet>
+            <group>
+              <group>
+								<field name="company_id" groups="base.group_erp_manager"/>
+								<field name="create_date" string="Fecha" readonly="1"/>
+								<field name="partner_id" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+								<field name="cuota_ids" attrs="{'readonly': [('state', '!=', 'borrador')]}" domain="[('partner_id', '=', partner_id),('state','=','activa')]">
+									<tree>
+										<field name="display_numero_cuota"/>
+										<field name="prestamo_id"/>
+										<field name="saldo"/>
+										<field name="state_mora"/>
+										<field name="state"/>
+									</tree>
+								</field>
+							</group>
+							<group>
+								<field name="total" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+								<field name="descripcion" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+								<field name="mobbex_uid" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+								<field name="mobbex_shorten_url" widget="url" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+								<field name="mobbex_url" widget="url" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+							</group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mobbex_orden_pago_action">
+      <field name="name">Ordenes de pago</field>
+      <field name="res_model">financiera.mobbex.orden.pago</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_ids" eval="[(5, 0, 0), 
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('mobbex_orden_pago_tree')}), 
+        (0, 0, {'view_mode': 'form', 'view_id': ref('mobbex_orden_pago_form')})]"/>
+    </record>
+
+		<!-- Top menu item -->
+				
+		<menuitem name="Ordenes de pago" id="menu_mobbex_orden_pago_action" parent="menu_mobbex" 
+			action="mobbex_orden_pago_action" sequence="8"/>
+
+	</data>
+</openerp>

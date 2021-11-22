@@ -30,6 +30,7 @@
         'security/security.xml',
         'views/mobbex_config.xml',
 				'views/mobbex_execution.xml',
+				'views/mobbex_orden_pago.xml',
 				'views/extends_res_company.xml',
 				'views/extends_financiera_prestamo.xml',
 				'views/extends_financiera_prestamo_cuota.xml',

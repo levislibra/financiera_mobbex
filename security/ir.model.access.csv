@@ -8,3 +8,6 @@ manager_financiera_mobbex_config_execute,financiera.mobbex.config.execute,model_
 
 user_financiera_mobbex_execution,financiera.mobbex.execution,model_financiera_mobbex_execution,financiera_mobbex.user,1,1,1,0
 manager_financiera_mobbex_execution,financiera.mobbex.execution,model_financiera_mobbex_execution,financiera_mobbex.manager,1,1,1,0
+
+user_financiera_mobbex_orden_pago,financiera.mobbex.orden.pago,model_financiera_mobbex_orden_pago,financiera_mobbex.user,1,1,1,0
+manager_financiera_mobbex_orden_pago,financiera.mobbex.orden.pago,model_financiera_mobbex_orden_pago,financiera_mobbex.manager,1,1,1,0
