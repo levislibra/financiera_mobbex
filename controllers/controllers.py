@@ -38,7 +38,7 @@ class FinancieraMobbexWebhookController(http.Controller):
 			_logger.info('Mobbex: suscriptor suspendido.')
 		elif webhook_type == "subscription:subscriber:active":
 			_logger.info('Mobbex: suscriptor activado.')
-		elif webhook_type == "checkout":
+		elif webhook_type == "payment_order":
 			if 'data[payment][reference]' in post:
 				_id = post['data[payment][reference]'].split('_')[0]
 				orden_pago_id = request.env['financiera.mobbex.orden.pago'].sudo().browse(int(_id))

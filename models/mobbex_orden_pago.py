@@ -73,11 +73,8 @@ class FinancieraMobbexOrdenPago(models.Model):
 			# 'multicard': True,
 			'webhook': WEBHOOK_DIR,
 		}
-		print("body:: ", body)
 		r = requests.post(URL_ORDEN_PAGO, data=json.dumps(body), headers=headers)
-		print("r:: ", r)
 		data = r.json()
-		print("data:: ", data)
 		if 'result' in data and data['result'] == True:
 			self.mobbex_uid = data['data']['uid']
 			self.mobbex_shorten_url = data['data']['shorten_url']
