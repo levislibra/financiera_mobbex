@@ -83,3 +83,12 @@ class FinancieraMobbexOrdenPago(models.Model):
 			self.mobbex_shorten_url = data['data']['shorten_url']
 			self.mobbex_url = data['data']['url']
 			self.state = 'abierta'
+
+	@api.one
+	def mobbex_orden_pago_read_execution(self, post):
+		print("mobbex_orden_pago_read_execution")
+		print("POST:: ", post)
+		if 'data[payment][status][code]' in post and post['data[payment][status][code]'] == 200:
+			for cuota_id in self.cuota_ids:
+				cuota_id.mobbex_cobrar_cuota()
+			self.state = 'cobrada'

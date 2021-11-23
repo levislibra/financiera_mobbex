@@ -38,6 +38,14 @@ class FinancieraMobbexWebhookController(http.Controller):
 			_logger.info('Mobbex: suscriptor suspendido.')
 		elif webhook_type == "subscription:subscriber:active":
 			_logger.info('Mobbex: suscriptor activado.')
+		elif webhook_type == "checkout":
+			if 'data[payment][reference]' in post:
+				_id = post['data[payment][reference]'].split('_')[0]
+				orden_pago_id = request.env['financiera.mobbex.orden.pago'].sudo().browse(int(_id))
+				orden_pago_id.mobbex_orden_pago_read_execution(post)
+				_logger.info('Mobbex: nueva orden de pago procesada.')
+			else:
+				_logger.warning('Mobbex: No existe reference de cuota.')
 
 		return json.dumps("OK")
 

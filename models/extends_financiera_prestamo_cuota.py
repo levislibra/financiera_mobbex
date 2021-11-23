@@ -163,20 +163,19 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			self.mobbex_ejecucion_ids = [execution_id.id]
 			if execution_id.mobbex_status_code == '200':
 				self.mobbex_cobrar_cuota(execution_id)
-				fecha_actual = date.today()
 				# si saldo es menor a un peso (por problemas de redondeo)
-				if self.saldo > 0:
+				if self.saldo > 1:
 					self.mobbex_subscriber_execution()
-				if self.cuota_previa_id and not self.cuota_previa_id.mobbex_stop_debit and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.state_mora in ['moraTemprana', 'moraMedia', 'moraTardia', 'incobrable']:
-					print("enviarmos a cobrar cuota previa: ", self.cuota)
-					self.cuota_previa_id.mobbex_subscriber_execution()
+				# if self.cuota_previa_id and not self.cuota_previa_id.mobbex_stop_debit and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.state_mora in ['moraTemprana', 'moraMedia', 'moraTardia', 'incobrable']:
+				# 	print("enviarmos a cobrar cuota previa: ", self.cuota)
+				# 	self.cuota_previa_id.mobbex_subscriber_execution()
 				if self.cuota_proxima_id and not self.cuota_proxima_id.mobbex_stop_debit and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.state_mora in ['moraTemprana', 'moraMedia', 'moraTardia', 'incobrable']:
 					print("enviamos a cobrar cuota proxima: ", self.cuota_proxima_id.name)
 					self.cuota_proxima_id.mobbex_subscriber_execution()
 			
 
 	@api.one
-	def mobbex_cobrar_cuota(self, execution_id):
+	def mobbex_cobrar_cuota(self, execution_id=None):
 		# Cobro cuota
 		# cr = self.env.cr
 		# uid = self.env.uid
@@ -186,7 +185,9 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 		journal_id = self.mobbex_id.journal_id
 		factura_electronica = self.mobbex_id.factura_electronica
 		partner_id = self.partner_id
-		amount = execution_id.mobbex_total
+		amount = self.saldo
+		if execution_id:
+			amount = execution_id.mobbex_total
 		invoice_date = datetime.now()
 		fpcmc_values = {
 			'partner_id': partner_id.id,
@@ -198,7 +199,8 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 		if self.saldo > 0:
 			self.confirmar_cobrar_cuota(payment_date, journal_id, amount, multi_cobro_id)
 			if len(multi_cobro_id.payment_ids) > 0:
-				execution_id.mobbex_payment_id = multi_cobro_id.payment_ids[0]
+				if execution_id:
+					execution_id.mobbex_payment_id = multi_cobro_id.payment_ids[0]
 		# Facturacion cuota
 		if not self.facturada:
 			fpcmf_values = {
