@@ -85,11 +85,7 @@ class FinancieraMobbexOrdenPago(models.Model):
 
 	@api.one
 	def mobbex_orden_pago_read_execution(self, post):
-		_logger.info("mobbex_orden_pago_read_execution")
-		_logger.info("POST!!!")
-		_logger.info(post)
-		_logger.info("*******")
-		if 'data[payment][status][code]' in post and post['data[payment][status][code]'] == 200:
+		if 'data[payment][status][code]' in post and post['data[payment][status][code]'] == '200':
 			for cuota_id in self.cuota_ids:
 				cuota_id.mobbex_cobrar_cuota()
 			self.state = 'cobrada'
