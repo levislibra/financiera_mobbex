@@ -2,9 +2,11 @@
 
 from openerp import models, fields, api
 from datetime import datetime, timedelta
-
+import logging
 import requests
 import json
+
+_logger = logging.getLogger(__name__)
 
 URL_ORDEN_PAGO = "https://api.mobbex.com/p/payment_order"
 
@@ -83,8 +85,10 @@ class FinancieraMobbexOrdenPago(models.Model):
 
 	@api.one
 	def mobbex_orden_pago_read_execution(self, post):
-		print("mobbex_orden_pago_read_execution")
-		print("POST:: ", post)
+		_logger.info("mobbex_orden_pago_read_execution")
+		_logger.info("POST!!!")
+		_logger.info(post)
+		_logger.info("*******")
 		if 'data[payment][status][code]' in post and post['data[payment][status][code]'] == 200:
 			for cuota_id in self.cuota_ids:
 				cuota_id.mobbex_cobrar_cuota()

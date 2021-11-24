@@ -40,8 +40,14 @@ class FinancieraMobbexWebhookController(http.Controller):
 			_logger.info('Mobbex: suscriptor activado.')
 		elif webhook_type == "payment_order":
 			if 'data[payment][reference]' in post:
+				_logger.info("POST!!!")
+				_logger.info(post)
+				_logger.info("ID ORDEN PAGO!!!")
+				_logger.info(post['data[payment][reference]'])
+				_logger.info("---------!!!")
 				_id = post['data[payment][reference]'].split('_')[0]
 				orden_pago_id = request.env['financiera.mobbex.orden.pago'].sudo().browse(int(_id))
+				_logger.info(orden_pago_id)
 				orden_pago_id.mobbex_orden_pago_read_execution(post)
 				_logger.info('Mobbex: nueva orden de pago procesada.')
 			else:
