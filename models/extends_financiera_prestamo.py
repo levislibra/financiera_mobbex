@@ -149,8 +149,13 @@ class ExtendsFinancieraPrestamo(models.Model):
 			self.mobbex_suscriptor_subscriberUrl = data['data']['subscriberUrl']
 
 	@api.one
-	def mobbex_suscripcion_exitosa(self):
-		self.mobbex_suscripcion_suscriptor_confirm = True
+	def mobbex_suscripcion_exitosa(self, payment_status):
+		print("mobbex_suscripcion_exitosa")
+		print("payment_status: ", payment_status)
+		if self.mobbex_id.accept_no_funds
+			self.mobbex_suscripcion_suscriptor_confirm = True
+		elif payment_status == 200:
+			self.mobbex_suscripcion_suscriptor_confirm = True
 
 	@api.one
 	def _compute_mobbex_days_execute_on_expiration(self):
