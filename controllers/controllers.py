@@ -20,10 +20,10 @@ class FinancieraMobbexWebhookController(http.Controller):
 				_id = post['data[subscriber][reference]']
 				_logger.info('Mobbex: subscriber id '+_id)
 				prestamo_id = request.env['financiera.prestamo'].sudo().browse(int(_id))
-				payment_status = 200
+				payment_status = '200'
 				if 'data[payment][status][code]' in post:
 					payment_status = post['data[payment][status][code]']
-				_logger.info('Payment status: ' + str(payment_status))
+				_logger.info('Payment status: ' + payment_status)
 				prestamo_id.mobbex_suscripcion_exitosa(payment_status)
 				_logger.info('Mobbex: Nueva suscripcion.')
 			else:

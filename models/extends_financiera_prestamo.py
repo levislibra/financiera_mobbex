@@ -154,7 +154,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 		print("payment_status: ", payment_status)
 		if self.mobbex_id.accept_no_funds:
 			self.mobbex_suscripcion_suscriptor_confirm = True
-		elif payment_status == 200:
+		elif payment_status == '200':
 			self.mobbex_suscripcion_suscriptor_confirm = True
 
 	@api.one
