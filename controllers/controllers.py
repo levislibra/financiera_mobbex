@@ -29,7 +29,18 @@ class FinancieraMobbexWebhookController(http.Controller):
 			else:
 				_logger.warning('Mobbex: No existe reference.')
 		elif webhook_type == "subscription:change_source":
-			_logger.info('Mobbex: cambio Metodo de Pago.')
+			if 'data[subscriber][reference]' in post:
+				_id = post['data[subscriber][reference]']
+				_logger.info('Mobbex: subscriber id '+_id)
+				prestamo_id = request.env['financiera.prestamo'].sudo().browse(int(_id))
+				payment_status = '200'
+				if 'data[payment][status][code]' in post:
+					payment_status = post['data[payment][status][code]']
+				_logger.info('Payment status: ' + payment_status)
+				prestamo_id.mobbex_suscripcion_exitosa(payment_status)
+				_logger.info('Mobbex: cambio Metodo de Pago.')
+			else:
+				_logger.warning('Mobbex: No existe reference.')
 		elif webhook_type == "subscription:execution":
 			if 'data[payment][reference]' in post:
 				_id = post['data[payment][reference]'].split('_')[0]
