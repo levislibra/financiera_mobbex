@@ -16,19 +16,14 @@ class FinancieraMobbexWebhookController(http.Controller):
 			webhook_type = post.get('type')
 			_logger.info('Mobbex: tipo '+post.get('type'))
 		if webhook_type == "subscription:registration":
-			_logger.info("checkkkkk new suscription")
-			_logger.info(post)
-			_logger.info("-----")
-			_logger.info(post['data'])
-			_logger.info("-----")
-			_logger.info(post['data[payment]'])
-			_logger.info("-----")
-			_logger.info(post['data[payment][status][code]'])
 			if 'data[subscriber][reference]' in post:
 				_id = post['data[subscriber][reference]']
 				_logger.info('Mobbex: subscriber id '+_id)
 				prestamo_id = request.env['financiera.prestamo'].sudo().browse(int(_id))
-				payment_status = post['data[payment][status][code]']
+				payment_status = 200
+				if 'data[payment][status][code]' in post:
+					payment_status = post['data[payment][status][code]']
+				_logger.info('Payment status: ' + str(payment_status))
 				prestamo_id.mobbex_suscripcion_exitosa(payment_status)
 				_logger.info('Mobbex: Nueva suscripcion.')
 			else:
