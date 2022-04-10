@@ -42,13 +42,14 @@ class FinancieraMobbexWebhookController(http.Controller):
 			else:
 				_logger.warning('Mobbex: No existe reference.')
 		elif webhook_type == "subscription:execution":
-			if 'data[payment][reference]' in post:
-				_id = post['data[payment][reference]'].split('_')[0]
-				cuota_id = request.env['financiera.prestamo.cuota'].sudo().browse(int(_id))
-				cuota_id.mobbex_read_execution(post)
-				_logger.info('Mobbex: nuevo debito procesado.')
-			else:
-				_logger.warning('Mobbex: No existe reference de cuota.')
+			pass
+			# if 'data[payment][reference]' in post:
+			# 	_id = post['data[payment][reference]'].split('_')[0]
+			# 	cuota_id = request.env['financiera.prestamo.cuota'].sudo().browse(int(_id))
+			# 	cuota_id.mobbex_read_execution(post)
+			# 	_logger.info('Mobbex: nuevo debito procesado.')
+			# else:
+			# 	_logger.warning('Mobbex: No existe reference de cuota.')
 		elif webhook_type == "subscription:subscriber:suspended":
 			_logger.info('Mobbex: suscriptor suspendido.')
 		elif webhook_type == "subscription:subscriber:active":
