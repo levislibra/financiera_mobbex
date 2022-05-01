@@ -156,7 +156,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			if 'data[payment][source][type]' in post:
 				values['mobbex_source_type'] = post['data[payment][source][type]']
 			if 'data[payment][source][number]' in post:
-				values['mobbex_source_number'] = post['data[payment][source][type]']
+				values['mobbex_source_number'] = post['data[payment][source][number]']
 			if 'data[execution][uid]' in post:
 				values['mobbex_ejecucion_id'] = post['data[execution][uid]']
 			execution_id = self.env['financiera.mobbex.execution'].create(values)
