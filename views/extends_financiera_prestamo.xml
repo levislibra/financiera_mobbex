@@ -47,7 +47,7 @@
 
 		<!-- Prestamos con stop automatico por errores -->
 
-		<record model="ir.ui.view" id="mobbex_prestamo_stop_automatico_tree">
+		<record model="ir.ui.view" id="mobbex_prestamo_stop_tree">
       <field name="name">Mobbex prestamos con stop debit</field>
       <field name="model">financiera.prestamo</field>
       <field name="arch" type="xml">
@@ -67,7 +67,6 @@
 					<field name="mobbex_stop_motivo"/>
 					<field name="mobbex_stop_cantidad"/>
 					<button name="mobbex_stop_reset" string="Habilitar debito" type="object"/>
-					<button string="Ver" name="ver_prestamo" type="object"/>
           <field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
@@ -77,8 +76,10 @@
       <field name="name">Prestamos con Stop Debit Automaticos</field>
       <field name="res_model">financiera.prestamo</field>
       <field name="domain">[('mobbex_stop_automatico', '=', True)]</field>
-			<field name="view_mode">tree</field>
-			<field name="view_id" ref="mobbex_prestamo_stop_automatico_tree"/>
+			<field name="view_mode">tree,form</field>
+			<field name="view_ids" eval="[(5, 0, 0), 
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('mobbex_prestamo_stop_tree')}), 
+        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo.financiera_prestamo_form')})]"/>
     </record>
 
 				
