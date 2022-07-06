@@ -79,7 +79,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_ids" eval="[(5, 0, 0), 
         (0, 0, {'view_mode': 'tree', 'view_id': ref('mobbex_prestamo_stop_tree')}), 
-        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo.financiera_prestamo_form')})]"/>
+        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamos.financiera_prestamo_form')})]"/>
     </record>
 
 				
