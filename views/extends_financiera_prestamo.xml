@@ -76,16 +76,14 @@
 		<record model="ir.actions.act_window" id="mobbex_prestamo_stop_action">
       <field name="name">Prestamos con Stop Debit Automaticos</field>
       <field name="res_model">financiera.prestamo</field>
-      <field name="view_mode">tree</field>
       <field name="domain">[('mobbex_stop_automatico', '=', True)]</field>
+			<field name="view_mode">tree</field>
 			<field name="view_id" ref="mobbex_prestamo_stop_automatico_tree"/>
     </record>
 
 				
 		<menuitem name="Prestamos con Stop Debit" id="menu_mobbex_prestamo_stop_action" parent="menu_mobbex" 
 			action="mobbex_prestamo_stop_action" sequence="15"/>
-	
-	
 	
 	</data>
 </openerp>

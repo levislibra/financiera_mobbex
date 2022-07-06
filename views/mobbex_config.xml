@@ -90,10 +90,10 @@
 
 		<!-- Top menu item -->
 				
-		<menuitem name="Mobbex" id="menu_mobbex" groups="financiera_mobbex.manager"
+		<menuitem name="Mobbex" id="menu_mobbex" groups="financiera_mobbex.user"
 			web_icon="financiera_mobbex,static/description/icon.png"/>
 		<menuitem name="Configuracion" id="menu_mobbex_action" parent="menu_mobbex" 
-			action="mobbex_action" sequence="100"/>
+			action="mobbex_action" sequence="100" groups="financiera_mobbex.manager"/>
 
 	</data>
 </openerp>
