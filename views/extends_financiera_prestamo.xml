@@ -10,28 +10,82 @@
 			<field name="arch" type="xml">        
 				<xpath expr="//field[@name='pago_voluntario_entidad']" position='after'>
 					<div>
-						<label string="Mobbex - Debito automatico" style="font-weight: bold;"/>
-						<field name="mobbex_debito_automatico" attrs="{'readonly': [('mobbex_id', '=', False)]}"/>
+						<label string="Mobbex - Suscripción" style="font-weight: bold;"/>
+						<field name="mobbex_debito_automatico"/>
 					</div>
 				</xpath>
-				<xpath expr="//page[@name='otra_informacion']" position='inside'>
-					<group string="Mobbex - Suscripcion tarjeta de debito">
-						<field name="mobbex_id" invisible="1"/>
-						<field name="mobbex_suscripcion_id" readonly="0"/>
-						<field name="mobbex_suscriptor_id" readonly="0"/>
-						<field name="mobbex_suscriptor_sourceUrl" widget="url" readonly="0"/>
-						<field name="mobbex_suscriptor_subscriberUrl" widget="url" readonly="0"/>
-						<field name="mobbex_suscripcion_suscriptor_confirm" readonly="0"/>
-						<field name="mobbex_suscripcion_suscriptor_attempts" readonly="1"/>
-					</group>
-					<group col="1">
-						<button name="button_mobbex_create_suscription" string="Crear suscripcion"
-							type="object" confirm="Desea confirmar?"/>
-						<button name="mobbex_create_suscriptor" string="Crear suscriptor"
-							type="object" confirm="Desea confirmar?"/>
-					</group>
+				<xpath expr="//page[@name='otra_informacion']" position='before'>
+					<page name="mobbex" string="Mobbex">
+						<group>
+							<group string="Suscripcion tarjeta de debito">
+								<label for="button_mobbex_create_suscription" string=" "/>
+								<button name="button_mobbex_create_suscription" string="Crear suscripcion"
+									type="object" confirm="Desea confirmar?"/>
+								<label for="mobbex_create_suscriptor" string=" "/>
+								<button name="mobbex_create_suscriptor" string="Crear suscriptor"
+									type="object" confirm="Desea confirmar?"/>
+								<field name="mobbex_id" invisible="1"/>
+								<field name="mobbex_suscripcion_id" readonly="0"/>
+								<field name="mobbex_suscriptor_id" readonly="0"/>
+								<field name="mobbex_suscriptor_sourceUrl" widget="url" readonly="0" style="background-color: lightsteelblue;"/>
+								<field name="mobbex_suscriptor_subscriberUrl" widget="url" readonly="0"/>
+								<field name="mobbex_suscripcion_suscriptor_confirm" readonly="0"/>
+								<field name="mobbex_suscripcion_suscriptor_attempts" readonly="1"/>
+							</group>
+							<group string="Bloqueo automatico segun errores">
+								<field name="mobbex_stop_automatico" readonly="1"/>
+								<field name="mobbex_stop_motivo" readonly="1"/>
+								<field name="mobbex_stop_cantidad" readonly="1"/>
+								<label for="mobbex_stop_reset" string=" "/>
+								<button name="mobbex_stop_reset" string="Habilitar debito" type="object"/>
+							</group>
+						</group>
+					</page>
 				</xpath>
 			</field>
 		</record>
+
+		<!-- Prestamos con stop automatico por errores -->
+
+		<record model="ir.ui.view" id="mobbex_prestamo_stop_automatico_tree">
+      <field name="name">financiera.prestamo.tree</field>
+      <field name="model">financiera.prestamo</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false" edit="false">
+					<field name="partner_id"/>
+					<field name="partner_main_id_number" string="DNI/CUIT/CUIL"/>
+					<field name="partner_mobile"/>
+					<field name="partner_email"/>
+          <field name="fecha"/>
+          <field name="name"/>
+					<field name="prestamo_tipo_id"/>
+          <field name="responsable_id" widget="many2one_unclickable"/>
+          <field name="monto_solicitado" sum="Total"/>
+          <field name="saldo" sum="Total"/>
+          <field name="plan_id"/>
+					<field name="sucursal_id"/>
+					<field name="mobbex_stop_motivo"/>
+					<field name="mobbex_stop_cantidad"/>
+					<button name="mobbex_stop_reset" string="Habilitar debito" type="object"/>
+					<button string="Ver" name="ver_prestamo" type="object"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
+        </tree>
+      </field>
+    </record>
+
+		<record model="ir.actions.act_window" id="mobbex_prestamo_stop_action">
+      <field name="name">Prestamos con Stop Debit Automaticos</field>
+      <field name="res_model">financiera.prestamo</field>
+      <field name="view_mode">tree</field>
+      <field name="domain">[('mobbex_stop_automatico', '=', True)]</field>
+			<field name="view_id" ref="mobbex_prestamo_stop_automatico_tree"/>
+    </record>
+
+				
+		<menuitem name="Prestamos con Stop Debit" id="menu_mobbex_prestamo_stop_action" parent="menu_mobbex" 
+			action="mobbex_prestamo_stop_action" sequence="50"/>
+	
+	
+	
 	</data>
 </openerp>

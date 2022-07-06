@@ -83,6 +83,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			cuotas_ids = cuotas_obj.search(cr, uid, [
 				('company_id', '=', company_id.id),
 				('prestamo_id.mobbex_debito_automatico', '=', True),
+				('prestamo_id.mobbex_stop_automatico', '=', False),
 				('prestamo_id.mobbex_suscripcion_suscriptor_confirm', '=', True),
 				('prestamo_id.state', '=', 'acreditado'),
 				('state', '=', 'activa'),
@@ -96,7 +97,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 				if cuota_id.partner_id.id not in partner_execute_ids:
 					amount = None
 					if arg_amount:
-						amount = float(arg_amount)
+						amount = min(amount, float(arg_amount))
 					cuota_id.mobbex_subscriber_execution(amount)
 					partner_execute_ids.append(cuota_id.partner_id.id)
 					count += 1
@@ -147,6 +148,9 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 				values['mobbex_status_message'] = post['data[payment][status][message]']
 			if 'data[payment][total]' in post:
 				values['mobbex_total'] = post['data[payment][total]']
+			if 'data[payment][created]' in post:
+				values['mobbex_created'] = post['data[payment][created]']
+				print('mobbex_created:::: ', values['mobbex_created'])
 			if 'data[payment][currency][code]' in post:
 				values['mobbex_currency_code'] = post['data[payment][currency][code]']
 			if 'data[payment][currency][text]' in post:
@@ -159,6 +163,8 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 				values['mobbex_source_number'] = post['data[payment][source][number]']
 			if 'data[execution][uid]' in post:
 				values['mobbex_ejecucion_id'] = post['data[execution][uid]']
+			if 'data[payment][id]' in post:
+				values['mobbex_operation_id'] = post['data[payment][id]']
 			execution_id = self.env['financiera.mobbex.execution'].create(values)
 			self.mobbex_ejecucion_ids = [execution_id.id]
 			if execution_id.mobbex_status_code == '200':
@@ -166,12 +172,18 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 				# si saldo es menor a un peso (por problemas de redondeo)
 				if self.saldo > 1:
 					self.mobbex_subscriber_execution()
-				# if self.cuota_previa_id and not self.cuota_previa_id.mobbex_stop_debit and self.cuota_previa_id.saldo > 0 and self.cuota_previa_id.state_mora in ['moraTemprana', 'moraMedia', 'moraTardia', 'incobrable']:
-				# 	print("enviarmos a cobrar cuota previa: ", self.cuota)
-				# 	self.cuota_previa_id.mobbex_subscriber_execution()
 				if self.cuota_proxima_id and not self.cuota_proxima_id.mobbex_stop_debit and self.cuota_proxima_id.saldo > 0 and self.cuota_proxima_id.state_mora in ['moraTemprana', 'moraMedia', 'moraTardia', 'incobrable']:
-					print("enviamos a cobrar cuota proxima: ", self.cuota_proxima_id.name)
 					self.cuota_proxima_id.mobbex_subscriber_execution()
+			elif execution_id.mobbex_status_code in ['400','411','413','417']:
+				self.prestamo_id.mobbex_stop_automatico = True
+				self.prestamo_id.mobbex_stop_motivo = execution_id.mobbex_status_message
+				self.prestamo_id.mobbex_stop_cantidad = self.prestamo_id.mobbex_stop_cantidad + 1
+			elif execution_id.mobbex_status_code in ['414', '415','416']:
+				self.prestamo_id.mobbex_stop_cantidad = self.prestamo_id.mobbex_stop_cantidad + 1
+				if self.prestamo_id.mobbex_stop_cantidad > 4:
+					self.prestamo_id.mobbex_stop_automatico = True
+					self.prestamo_id.mobbex_stop_motivo = execution_id.mobbex_status_message
+				
 			
 
 	@api.one
@@ -188,6 +200,8 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 		amount = self.saldo
 		if execution_id:
 			amount = execution_id.mobbex_total
+			if execution_id.mobbex_created:
+				payment_date = execution_id.mobbex_created
 		invoice_date = datetime.now()
 		fpcmc_values = {
 			'partner_id': partner_id.id,

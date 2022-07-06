@@ -17,6 +17,9 @@ class ExtendsFinancieraPrestamo(models.Model):
 
 	mobbex_id = fields.Many2one('financiera.mobbex.config', related='company_id.mobbex_id', readonly=True)
 	mobbex_debito_automatico = fields.Boolean('Mobbex - Debito automatico')
+	mobbex_stop_automatico = fields.Boolean('Mobbex - Stop automatico', default=False)
+	mobbex_stop_motivo = fields.Char('Mobbex - Stop automatico motivo')
+	mobbex_stop_cantidad = fields.Integer('Mobbex - Stop automatico (cantidad de errores)')
 	# Suscription
 	mobbex_suscripcion_id = fields.Char('Mobbex - Suscripcion ID')
 	mobbex_suscripcion_shorten_url = fields.Char('Mobbex - Url para la suscripcion')
@@ -38,6 +41,13 @@ class ExtendsFinancieraPrestamo(models.Model):
 			})
 		return rec
 
+	@api.one
+	def mobbex_stop_reset(self):
+		self.update({
+			'mobbex_stop_automatico': False,
+			'mobbex_stop_motivo': '',
+			'mobbex_stop_cantidad': 0,
+		})
 
 	@api.one
 	def enviar_a_autorizado(self):

@@ -10,7 +10,8 @@ class FinancieraMobbexExecution(models.Model):
 	mobbex_cuota_id = fields.Many2one('financiera.prestamo.cuota', 'Cuota')
 	partner_id = fields.Many2one('res.partner', related='mobbex_cuota_id.partner_id', readonly=True)
 	mobbex_payment_id = fields.Many2one('account.payment', 'Comprobante de pago')
-	company_id = fields.Many2one('res.company', 'Empresa')
+	mobbex_created = fields.Datetime('Fecha de pago')
+	mobbex_operation_id = fields.Char('ID de operacion')
 	mobbex_ejecucion_id = fields.Char('Ejecucion')
 	mobbex_status_code = fields.Char('Codigo')
 	mobbex_status_text = fields.Char('Text')
@@ -21,4 +22,5 @@ class FinancieraMobbexExecution(models.Model):
 	mobbex_source_name = fields.Char('Tarjeta')
 	mobbex_source_type = fields.Char('Tipo de tajeta')
 	mobbex_source_number = fields.Char('Numero de tarjeta')
+	company_id = fields.Many2one('res.company', 'Empresa')
 

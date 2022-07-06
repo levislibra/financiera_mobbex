@@ -9,7 +9,9 @@
 					<field name="create_date" string="Fecha" readonly="1"/>
 					<field name="partner_id" readonly="1"/>
           <field name="mobbex_source_name" readonly="1"/>
-					<field name="mobbex_source_type" readonly="1"/>
+					<field name="mobbex_created" readonly="1"/>
+					<field name='mobbex_ejecucion_id' readonly="1"/>
+					<field name='mobbex_operation_id' readonly="1"/>
 					<field name="mobbex_source_number" readonly="1"/>								
 					<field name="mobbex_total" readonly="1"/>
 					<field name="mobbex_currency_code" readonly="1"/>
@@ -60,7 +62,10 @@
 								<field name="create_date" string="Fecha" readonly="1"/>
 								<field name="partner_id" readonly="1"/>
 								<field name="mobbex_source_name" readonly="1"/>
+								<field name="mobbex_created" readonly="1"/>
 								<field name="mobbex_source_type" readonly="1"/>
+								<field name='mobbex_ejecucion_id' readonly="1"/>
+								<field name='mobbex_operation_id' readonly="1"/>
 								<field name="mobbex_source_number" readonly="1"/>								
 								<field name="mobbex_total" readonly="1"/>
 								<field name="mobbex_currency_code" readonly="1"/>
@@ -85,8 +90,6 @@
         (0, 0, {'view_mode': 'tree', 'view_id': ref('mobbex_execution_tree')}), 
         (0, 0, {'view_mode': 'form', 'view_id': ref('mobbex_execution_form')})]"/>
     </record>
-
-		<!-- Top menu item -->
 				
 		<menuitem name="Ejecuciones" id="menu_mobbex_execution_action" parent="menu_mobbex" 
 			action="mobbex_execution_action" sequence="0"/>
