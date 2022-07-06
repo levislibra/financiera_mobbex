@@ -10,7 +10,7 @@ class FinancieraMobbexExecution(models.Model):
 	mobbex_cuota_id = fields.Many2one('financiera.prestamo.cuota', 'Cuota')
 	partner_id = fields.Many2one('res.partner', related='mobbex_cuota_id.partner_id', readonly=True)
 	mobbex_payment_id = fields.Many2one('account.payment', 'Comprobante de pago')
-	mobbex_created = fields.Datetime('Fecha de pago')
+	mobbex_created = fields.Datetime('Fecha de ejecucion')
 	mobbex_operation_id = fields.Char('ID de operacion')
 	mobbex_ejecucion_id = fields.Char('Ejecucion')
 	mobbex_status_code = fields.Char('Codigo')

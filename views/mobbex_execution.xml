@@ -9,9 +9,9 @@
 					<field name="create_date" string="Fecha" readonly="1"/>
 					<field name="partner_id" readonly="1"/>
           <field name="mobbex_source_name" readonly="1"/>
-					<field name="mobbex_created" readonly="1"/>
+					<!-- <field name="mobbex_created" readonly="1"/>
 					<field name='mobbex_ejecucion_id' readonly="1"/>
-					<field name='mobbex_operation_id' readonly="1"/>
+					<field name='mobbex_operation_id' readonly="1"/> -->
 					<field name="mobbex_source_number" readonly="1"/>								
 					<field name="mobbex_total" readonly="1"/>
 					<field name="mobbex_currency_code" readonly="1"/>

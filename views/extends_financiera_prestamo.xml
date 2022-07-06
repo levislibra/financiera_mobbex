@@ -48,7 +48,7 @@
 		<!-- Prestamos con stop automatico por errores -->
 
 		<record model="ir.ui.view" id="mobbex_prestamo_stop_automatico_tree">
-      <field name="name">financiera.prestamo.tree</field>
+      <field name="name">Mobbex prestamos con stop debit</field>
       <field name="model">financiera.prestamo</field>
       <field name="arch" type="xml">
         <tree create="false" delete="false" edit="false">
@@ -83,7 +83,7 @@
 
 				
 		<menuitem name="Prestamos con Stop Debit" id="menu_mobbex_prestamo_stop_action" parent="menu_mobbex" 
-			action="mobbex_prestamo_stop_action" sequence="50"/>
+			action="mobbex_prestamo_stop_action" sequence="15"/>
 	
 	
 	
