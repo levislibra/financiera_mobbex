@@ -128,8 +128,13 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					'reference': reference,
 				}
 				r = requests.post(url, data=json.dumps(body), headers=headers)
+				_logger.info('r')
+				_logger.info(r)
+				_logger.info('+++++++')
 				data = r.json()
-				print("data: ", data)
+				_logger.info('data')
+				_logger.info(data)
+				_logger.info('+++++++')
 				if 'result' in data and data['result'] == True:
 					pass
 			new_cr.close()
