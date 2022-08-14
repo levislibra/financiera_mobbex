@@ -84,8 +84,9 @@ class FinancieraMobbexOrdenPago(models.Model):
 			self.state = 'abierta'
 
 	@api.one
-	def mobbex_orden_pago_read_execution(self, post):
-		if 'data[payment][status][code]' in post and post['data[payment][status][code]'] == '200':
-			for cuota_id in self.cuota_ids:
-				cuota_id.mobbex_cobrar_cuota()
-			self.state = 'cobrada'
+	def mobbex_orden_pago_read_execution(self, data):
+		if 'payment' in data and 'status' in data['payment'] and 'code' in data['payment']['status']:
+			if data['payment']['status']['code'] == '200':
+				for cuota_id in self.cuota_ids:
+					cuota_id.mobbex_cobrar_cuota()
+				self.state = 'cobrada'

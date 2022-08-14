@@ -134,37 +134,36 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			new_cr.close()
 
 	@api.one
-	def mobbex_read_execution(self, post):
+	def mobbex_read_execution(self, data):
 		if self.state in ('activa','judicial','incobrable') and self.saldo > 0:
 			values = {
 				'company_id': self.company_id.id,
 				# 'mobbex_cuota_id': self.id,
 			}
-			if 'data[payment][status][code]' in post:
-				values['mobbex_status_code'] = post['data[payment][status][code]']
-			if 'data[payment][status][text]' in post:
-				values['mobbex_status_text'] = post['data[payment][status][text]']
-			if 'data[payment][status][message]' in post:
-				values['mobbex_status_message'] = post['data[payment][status][message]']
-			if 'data[payment][total]' in post:
-				values['mobbex_total'] = post['data[payment][total]']
-			if 'data[payment][created]' in post:
-				values['mobbex_created'] = post['data[payment][created]']
-				print('mobbex_created:::: ', values['mobbex_created'])
-			if 'data[payment][currency][code]' in post:
-				values['mobbex_currency_code'] = post['data[payment][currency][code]']
-			if 'data[payment][currency][text]' in post:
-				values['mobbex_currency_text'] = post['data[payment][currency][text]']
-			if 'data[payment][source][name]' in post:
-				values['mobbex_source_name'] = post['data[payment][source][name]']
-			if 'data[payment][source][type]' in post:
-				values['mobbex_source_type'] = post['data[payment][source][type]']
-			if 'data[payment][source][number]' in post:
-				values['mobbex_source_number'] = post['data[payment][source][number]']
-			if 'data[execution][uid]' in post:
-				values['mobbex_ejecucion_id'] = post['data[execution][uid]']
-			if 'data[payment][id]' in post:
-				values['mobbex_operation_id'] = post['data[payment][id]']
+			if 'payment' in data and 'status' in data['payment'] and 'code' in data['payment']['status']:
+				values['mobbex_status_code'] = data['payment']['status']['code']
+			if 'payment' in data and 'status' in data['payment'] and 'text' in data['payment']['status']:
+				values['mobbex_status_text'] = data['payment']['status']['text']
+			if 'payment' in data and 'status' in data['payment'] and 'message' in data['payment']['status']:
+				values['mobbex_status_message'] = data['payment']['status']['message']
+			if 'payment' in data and 'total' in data['payment']:
+				values['mobbex_total'] = data['payment']['total']
+			if 'payment' in data and 'created' in data['payment']:
+				values['mobbex_created'] = data['payment']['created']
+			if 'payment' in data and 'currency' in data['payment'] and 'code' in data['payment']['currency']:
+				values['mobbex_currency_code'] = data['payment']['currency']['code']
+			if 'payment' in data and 'currency' in data['payment'] and 'text' in data['payment']['currency']:
+				values['mobbex_currency_text'] = data['payment']['currency']['text']
+			if 'payment' in data and 'source' in data['payment'] and 'name' in data['payment']['source']:
+				values['mobbex_source_name'] = data['payment']['source']['name']
+			if 'payment' in data and 'source' in data['payment'] and 'type' in data['payment']['source']:
+				values['mobbex_source_type'] = data['payment']['source']['type']
+			if 'payment' in data and 'source' in data['payment'] and 'number' in data['payment']['source']:
+				values['mobbex_source_number'] = data['payment']['source']['number']
+			if 'execution' in data and 'uid' in data['execution']:
+				values['mobbex_ejecucion_id'] = data['execution']['uid']
+			if 'payment' in data and 'id' in data['payment']:
+				values['mobbex_operation_id'] = data['payment']['id']
 			execution_id = self.env['financiera.mobbex.execution'].create(values)
 			self.mobbex_ejecucion_ids = [execution_id.id]
 			if execution_id.mobbex_status_code == '200':
@@ -180,7 +179,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 				self.prestamo_id.mobbex_stop_cantidad = self.prestamo_id.mobbex_stop_cantidad + 1
 			elif execution_id.mobbex_status_code in ['414', '415','416']:
 				self.prestamo_id.mobbex_stop_cantidad = self.prestamo_id.mobbex_stop_cantidad + 1
-				if self.prestamo_id.mobbex_stop_cantidad > 4:
+				if self.prestamo_id.mobbex_stop_cantidad > 9:
 					self.prestamo_id.mobbex_stop_automatico = True
 					self.prestamo_id.mobbex_stop_motivo = execution_id.mobbex_status_message
 				
