@@ -12,7 +12,6 @@ class FinancieraMobbexWebhookController(http.Controller):
 		_logger.info('Mobbex: nuevo webhook.')
 		response = request.jsonrequest
 		_logger.info(response)
-		_logger.info(response.keys())
 		_logger.info('Mobbex: ++++++++++++++')
 		webhook_type = None
 		if 'type' in response:
