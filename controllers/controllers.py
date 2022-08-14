@@ -11,6 +11,8 @@ class FinancieraMobbexWebhookController(http.Controller):
 	@http.route("/financiera.mobbex/webhook", type='json', auth='none', cors='*', csrf=False)#, auth="public", csrf=False)
 	def webhook_listener(self, **post):
 		_logger.info('Mobbex: nuevo webhook.')
+		_logger.info(post)
+		_logger.info('Mobbex: ++++++++++++++')
 		webhook_type = None
 		if 'type' in post.keys():
 			webhook_type = post.get('type')
