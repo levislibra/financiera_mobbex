@@ -2,7 +2,6 @@
 from openerp import http
 from openerp.http import request
 import logging
-import yaml
 import json
 
 _logger = logging.getLogger(__name__)
@@ -11,8 +10,10 @@ class FinancieraMobbexWebhookController(http.Controller):
 	@http.route("/financiera.mobbex/webhook", type='json', auth='none', cors='*', csrf=False)#, auth="public", csrf=False)
 	def webhook_listener(self, **post):
 		_logger.info('Mobbex: nuevo webhook.')
-		_logger.info(self)
-		_logger.info(post)
+		_logger.info(request.jsonrequest)
+		data = request.jsonrequest
+		_logger.info(data)
+		_logger.info(data.keys())
 		_logger.info('Mobbex: ++++++++++++++')
 		webhook_type = None
 		if 'type' in post.keys():
