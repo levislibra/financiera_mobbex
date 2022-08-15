@@ -18,6 +18,7 @@
 			<field name="arch" type="xml">
 				<form create="false" delete="false">
 					<header>
+						<button string="Actualizar ultimos cobros" name="mobbex_update_aprobados" type="object" class="oe_highlight"/>
 					</header>
 					<sheet>
 						<group>
