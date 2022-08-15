@@ -44,7 +44,7 @@ class FinancieraMobbexConfig(models.Model):
 				'x-api-key': company_id.mobbex_id.api_key,
 				'x-access-token': company_id.mobbex_id.access_token,
 			}
-			from_day = datetime.now() - timedelta(days=company_id.days_check_update_aprobados)
+			from_day = datetime.now() - timedelta(days=company_id.mobbex_id.days_check_update_aprobados)
 			created = datetime.now()
 			page = 0
 			while (from_day < created):
