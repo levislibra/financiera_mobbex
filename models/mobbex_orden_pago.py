@@ -90,3 +90,10 @@ class FinancieraMobbexOrdenPago(models.Model):
 				for cuota_id in self.cuota_ids:
 					cuota_id.mobbex_cobrar_cuota()
 				self.state = 'cobrada'
+	
+	@api.one
+	def mobbex_orden_pago_read_execution_aprobado(self, data):
+		if data['status'] == '200':
+			for cuota_id in self.cuota_ids:
+				cuota_id.mobbex_cobrar_cuota()
+			self.state = 'cobrada'

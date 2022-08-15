@@ -128,13 +128,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					'reference': reference,
 				}
 				r = requests.post(url, data=json.dumps(body), headers=headers)
-				_logger.info('r')
-				_logger.info(r)
-				_logger.info('+++++++')
 				data = r.json()
-				_logger.info('data')
-				_logger.info(data)
-				_logger.info('+++++++')
 				if 'result' in data and data['result'] == True:
 					pass
 			new_cr.close()
@@ -190,6 +184,29 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 					self.prestamo_id.mobbex_stop_motivo = execution_id.mobbex_status_message
 				
 			
+	@api.one
+	def mobbex_read_execution_aprobado(self, data):
+		if self.state in ('activa','judicial','incobrable') and self.saldo > 0:
+			values = {
+				'company_id': self.company_id.id,
+				# 'mobbex_cuota_id': self.id,
+			}
+			values['mobbex_status_code'] = data['status']
+			values['mobbex_status_text'] = 'Aprobado'
+			values['mobbex_status_message'] = 'Transacción Aprobada'
+			values['mobbex_total'] = data['total']
+			values['mobbex_created'] = data['created']
+			values['mobbex_currency_code'] = data['currency']
+			values['mobbex_currency_text'] = data['currency_data']['label']
+			values['mobbex_source_name'] = data['sourceName']
+			values['mobbex_source_type'] = 'card'
+			values['mobbex_source_number'] = data['card_number']
+			# values['mobbex_ejecucion_id'] = 
+			# values['mobbex_operation_id'] = 
+			execution_id = self.env['financiera.mobbex.execution'].create(values)
+			self.mobbex_ejecucion_ids = [execution_id.id]
+			if execution_id.mobbex_status_code == '200':
+				self.mobbex_cobrar_cuota(execution_id)
 
 	@api.one
 	def mobbex_cobrar_cuota(self, execution_id=None):
