@@ -197,7 +197,7 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 			values['mobbex_total'] = data['total']
 			values['mobbex_created'] = data['created']
 			values['mobbex_currency_code'] = data['currency']
-			values['mobbex_currency_text'] = data['currency_data']['label']
+			values['mobbex_currency_text'] = data['totals']['currency_data']['label']
 			values['mobbex_source_name'] = data['sourceName']
 			values['mobbex_source_type'] = 'card'
 			values['mobbex_source_number'] = data['card_number']
