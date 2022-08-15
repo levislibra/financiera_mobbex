@@ -22,6 +22,7 @@ class FinancieraMobbexConfig(models.Model):
 	validate_id = fields.Boolean('Rechazar si el DNI no coincide contra la Tarjeta')
 	accept_no_funds = fields.Boolean('Aceptar tarjeta que no posea fondos')
 	days_execute_on_expiration = fields.Integer('Primer dia a debitar con respecto al vencimiento')
+	days_check_update_aprobados = fields.Integer('Dias para chequear si hay actualizacion de aprobados', default=15)
 	company_id = fields.Many2one('res.company', 'Empresa', required=False)
 	journal_id = fields.Many2one('account.journal', 'Diario de Cobro', domain="[('type', 'in', ('cash', 'bank'))]")
 	factura_electronica = fields.Boolean('Factura electronica')
@@ -36,14 +37,14 @@ class FinancieraMobbexConfig(models.Model):
 	def _cron_update_aprobados(self):
 		print("_cron_update_aprobados")
 		company_obj = self.pool.get('res.company')
-		company_ids = [3, 10] #company_obj.search(self.env.cr, self.env.uid, [])
+		company_ids = company_obj.search(self.env.cr, self.env.uid, [])
 		for _id in company_ids:
 			company_id = company_obj.browse(self.env.cr, self.env.uid, _id)
 			headers = {
 				'x-api-key': company_id.mobbex_id.api_key,
 				'x-access-token': company_id.mobbex_id.access_token,
 			}
-			from_day = datetime.now() - timedelta(days=15)
+			from_day = datetime.now() - timedelta(days=company_id.days_check_update_aprobados)
 			created = datetime.now()
 			page = 0
 			while (from_day < created):
