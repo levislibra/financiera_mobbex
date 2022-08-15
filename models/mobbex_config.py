@@ -43,8 +43,8 @@ class FinancieraMobbexConfig(models.Model):
 				'x-api-key': company_id.mobbex_id.api_key,
 				'x-access-token': company_id.mobbex_id.access_token,
 			}
-			from_day = datetime.datetime.now() - datetime.timedelta(days=15)
-			created = datetime.datetime.now()
+			from_day = datetime.now() - timedelta(days=15)
+			created = datetime.now()
 			page = 0
 			while (from_day < created):
 				params = {
@@ -64,7 +64,7 @@ class FinancieraMobbexConfig(models.Model):
 								print('reference: ', doc['reference'])
 								print('status: ', doc['status'])
 								print('total: ', doc['total'])
-								created = datetime.datetime.strptime(doc['created'].split('T')[0], "%Y-%m-%d")
+								created = datetime.strptime(doc['created'].split('T')[0], "%Y-%m-%d")
 								print('created: ', created)
 								print('context.value: ', doc['context']['value'])
 								print('context.name: ', doc['context']['name'])
