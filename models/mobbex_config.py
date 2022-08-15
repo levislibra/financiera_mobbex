@@ -34,7 +34,7 @@ class FinancieraMobbexConfig(models.Model):
 			execute_id.update_nextcall()
 
 	@api.one
-	def update_aprobados(self):
+	def mobbex_update_aprobados(self):
 		self.company_id.mobbex_update_aprobados()
 
 	@api.model
