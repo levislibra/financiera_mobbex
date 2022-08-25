@@ -39,7 +39,6 @@ class FinancieraMobbexConfig(models.Model):
 
 	@api.model
 	def _cron_update_aprobados(self):
-		print("_cron_update_aprobados")
 		company_obj = self.pool.get('res.company')
 		company_ids = company_obj.search(self.env.cr, self.env.uid, [])
 		for _id in company_ids:

@@ -160,8 +160,6 @@ class ExtendsFinancieraPrestamo(models.Model):
 
 	@api.one
 	def mobbex_suscripcion_exitosa(self, payment_status):
-		print("mobbex_suscripcion_exitosa")
-		print("payment_status: ", payment_status)
 		if self.mobbex_id.accept_no_funds:
 			self.mobbex_suscripcion_suscriptor_confirm = True
 		elif payment_status == '200':

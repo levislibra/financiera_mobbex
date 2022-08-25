@@ -37,16 +37,9 @@ class ExtendsResCompany(models.Model):
 					data = response['data']
 					if 'docs' in data:
 						docs = data['docs']
-						print('len docs: ' + str(len(docs)))
 						for doc in docs:
 							if 'reference' in doc:
-								print('reference: ', doc['reference'])
-								print('status: ', doc['status'])
-								print('total: ', doc['total'])
 								created = datetime.strptime(doc['created'].split('T')[0], "%Y-%m-%d")
-								print('created: ', created)
-								print('context.value: ', doc['context']['value'])
-								print('context.name: ', doc['context']['name'])
 								_id = doc['reference'].split('_')[0]
 								if doc['context']['value'] == 'plugin.value.subscriptions:exec':
 									cuota_id = self.env['financiera.prestamo.cuota'].sudo().browse(int(_id))
