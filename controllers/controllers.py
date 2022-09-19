@@ -9,14 +9,12 @@ class FinancieraMobbexWebhookController(http.Controller):
 
 	@http.route("/financiera.mobbex/webhook", type='json', auth='none', cors='*', csrf=False)#, auth="public", csrf=False)
 	def webhook_listener(self, **post):
-		_logger.info('Mobbex: nuevo webhook.')
+		# _logger.info('Mobbex: nuevo webhook.')
 		response = request.jsonrequest
-		_logger.info(response)
-		_logger.info('Mobbex: ++++++++++++++')
 		webhook_type = None
 		if 'type' in response:
 			webhook_type = response.get('type')
-			_logger.info('Mobbex: tipo ' + webhook_type)
+			# _logger.info('Mobbex: tipo ' + webhook_type)
 		data = response.get('data')
 		if webhook_type == "subscription:registration":
 			if 'subscriber' in data and 'reference' in data['subscriber']:
