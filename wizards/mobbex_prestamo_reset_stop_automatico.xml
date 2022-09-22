@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!-- Ejecutar debitos -->
+
+	<record id="mobbex_prestamo_reset_stop_wizard" model="ir.ui.view">
+		<field name="name">Reiniciar cobros</field>
+		<field name="model">mobbex.prestamo.reset.stop.wizard</field>
+		<field name="arch" type="xml">
+			<form>
+				<footer>
+					<button name="reset_stop_automatico" string="Confirmar" class="oe_right oe_highlight" type="object" />
+					<button string="Cancel" class="oe_right" special="cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>
+
+	<act_window 
+		id="action_prestamo_reset_stop_automatico" 
+		name="Reiniciar cobros (Mobbex stop automatico)" 
+		src_model="financiera.prestamo" 
+		res_model="mobbex.prestamo.reset.stop.wizard" 
+		view_id="mobbex_prestamo_reset_stop_wizard" 
+		view_type="tree" 
+		view_mode="form" 
+		key2="client_action_multi" 
+		target="new"/>
+
+</odoo>

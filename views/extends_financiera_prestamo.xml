@@ -33,7 +33,7 @@
 								<field name="mobbex_suscripcion_suscriptor_attempts" readonly="1"/>
 							</group>
 							<group string="Bloqueo automatico segun errores">
-								<field name="mobbex_stop_automatico" readonly="1"/>
+								<field name="mobbex_stop_automatico" readonly="0"/>
 								<field name="mobbex_stop_motivo" readonly="1"/>
 								<field name="mobbex_stop_cantidad" readonly="1"/>
 								<label for="mobbex_stop_reset" string=" "/>
@@ -48,41 +48,40 @@
 		<!-- Prestamos con stop automatico por errores -->
 
 		<record model="ir.ui.view" id="mobbex_prestamo_stop_tree">
-      <field name="name">Mobbex prestamos con stop debit</field>
-      <field name="model">financiera.prestamo</field>
-      <field name="arch" type="xml">
-        <tree create="false" delete="false" edit="false">
-					<field name="partner_id"/>
-					<field name="partner_main_id_number" string="DNI/CUIT/CUIL"/>
-					<field name="partner_mobile"/>
-					<field name="partner_email"/>
-          <field name="fecha"/>
-          <field name="name"/>
-					<field name="prestamo_tipo_id"/>
-          <field name="responsable_id" widget="many2one_unclickable"/>
-          <field name="monto_solicitado" sum="Total"/>
-          <field name="saldo" sum="Total"/>
-          <field name="plan_id"/>
-					<field name="sucursal_id"/>
-					<field name="mobbex_stop_motivo"/>
-					<field name="mobbex_stop_cantidad"/>
-					<button name="mobbex_stop_reset" string="Habilitar debito" type="object"/>
-          <field name="company_id" groups="base.group_erp_manager"/>
-        </tree>
-      </field>
-    </record>
+			<field name="name">Mobbex prestamos con stop debit</field>
+			<field name="model">financiera.prestamo</field>
+			<field name="arch" type="xml">
+				<tree create="false" delete="false" edit="false">
+					<field name="partner_id" />
+					<field name="partner_main_id_number" string="DNI/CUIT/CUIL" />
+					<field name="partner_mobile" />
+					<field name="partner_email" />
+					<field name="fecha" />
+					<field name="name" />
+					<field name="prestamo_tipo_id" />
+					<field name="responsable_id" widget="many2one_unclickable" />
+					<field name="monto_solicitado" sum="Total" />
+					<field name="saldo" sum="Total" />
+					<field name="plan_id" />
+					<field name="sucursal_id" />
+					<field name="mobbex_stop_motivo" />
+					<field name="mobbex_stop_cantidad" />
+					<button name="mobbex_stop_reset" string="Habilitar debito" type="object" />
+					<field name="company_id" groups="base.group_erp_manager" />
+				</tree>
+			</field>
+		</record>
 
 		<record model="ir.actions.act_window" id="mobbex_prestamo_stop_action">
-      <field name="name">Prestamos con Stop Debit Automaticos</field>
-      <field name="res_model">financiera.prestamo</field>
-      <field name="domain">[('mobbex_stop_automatico', '=', True)]</field>
+			<field name="name">Prestamos con Stop Debit Automaticos</field>
+			<field name="res_model">financiera.prestamo</field>
+			<field name="domain">[('mobbex_stop_automatico', '=', True)]</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_ids" eval="[(5, 0, 0), 
         (0, 0, {'view_mode': 'tree', 'view_id': ref('mobbex_prestamo_stop_tree')}), 
-        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamos.financiera_prestamo_form')})]"/>
-    </record>
+        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamos.financiera_prestamo_form')})]" />
+		</record>
 
-				
 		<menuitem name="Prestamos con Stop Debit" id="menu_mobbex_prestamo_stop_action" parent="menu_mobbex" 
 			action="mobbex_prestamo_stop_action" sequence="15"/>
 	
