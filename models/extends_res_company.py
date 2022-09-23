@@ -25,12 +25,10 @@ class ExtendsResCompany(models.Model):
 			}
 			from_day = datetime.now() - timedelta(days=self.mobbex_id.days_check_update_aprobados)
 			created = datetime.now()
-			len_docs = 1
 			page = 0
-			while (from_day < created and len_docs > 0):
+			while (from_day < created):
 				_logger.info('from_day: %s' % from_day)
 				_logger.info('created: %s' % created)
-				_logger.info('len_docs: %s' % len_docs)
 				params = {
 					'page': page,
 					'limit': 50,
@@ -42,7 +40,6 @@ class ExtendsResCompany(models.Model):
 					data = response['data']
 					if 'docs' in data:
 						docs = data['docs']
-						len_docs = len(docs)
 						for doc in docs:
 							if 'reference' in doc:
 								created = datetime.strptime(doc['created'].split('T')[0], "%Y-%m-%d")
@@ -61,6 +58,6 @@ class ExtendsResCompany(models.Model):
 								_logger.warning('Mobbex: No existe reference de cuota.')
 							if from_day >= created:
 								break
-						if len(docs) == 0:
+						if len(docs) <= 1:
 							break
 				page += 1
