@@ -34,11 +34,11 @@
 				<field name="name">Mobbex - Chequeamos ultimos cobros</field>
 				<field name="user_id" ref="base.user_root" />
 				<field name="priority">1</field>
-				<field name="interval_number">1</field>
+				<field name="interval_number">2</field>
 				<field name="interval_type">days</field>
 				<field name="numbercall">-1</field>
 				<field name="doall" eval="False"/>
-				<field name="nextcall" >2021-03-03 23:00:00</field>
+				<field name="nextcall" >2021-03-03 05:00:00</field>
 				<field name="model">financiera.mobbex.config</field>
 				<field name="function">_cron_update_aprobados</field>
 			</record>

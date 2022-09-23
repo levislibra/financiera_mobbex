@@ -17,7 +17,6 @@ class ExtendsResCompany(models.Model):
 
 	@api.one
 	def mobbex_update_aprobados(self):
-		_logger.info('res.company Actualizando aprobados para la empresa %s' % self.name)
 		if self.mobbex_id:
 			headers = {
 				'x-api-key': self.mobbex_id.api_key,
@@ -27,8 +26,6 @@ class ExtendsResCompany(models.Model):
 			created = datetime.now()
 			page = 0
 			while (from_day < created):
-				_logger.info('from_day: %s' % from_day)
-				_logger.info('created: %s' % created)
 				params = {
 					'page': page,
 					'limit': 50,

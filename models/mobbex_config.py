@@ -39,11 +39,9 @@ class FinancieraMobbexConfig(models.Model):
 
 	@api.model
 	def _cron_update_aprobados(self):
-		_logger.info('Ejecutando cron de actualizacion de aprobados')
 		company_obj = self.pool.get('res.company')
 		company_ids = company_obj.search(self.env.cr, self.env.uid, [])
 		for _id in company_ids:
 			company_id = company_obj.browse(self.env.cr, self.env.uid, _id)
-			_logger.info('Actualizando aprobados para la empresa %s' % company_id.name)
 			company_id.mobbex_update_aprobados()
 			
