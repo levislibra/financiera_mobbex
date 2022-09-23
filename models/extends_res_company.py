@@ -17,6 +17,7 @@ class ExtendsResCompany(models.Model):
 
 	@api.one
 	def mobbex_update_aprobados(self):
+		_logger.info('res.company Actualizando aprobados para la empresa %s' % self.name)
 		if self.mobbex_id:
 			headers = {
 				'x-api-key': self.mobbex_id.api_key,
@@ -24,8 +25,12 @@ class ExtendsResCompany(models.Model):
 			}
 			from_day = datetime.now() - timedelta(days=self.mobbex_id.days_check_update_aprobados)
 			created = datetime.now()
+			len_docs = 1
 			page = 0
-			while (from_day < created):
+			while (from_day < created and len_docs > 0):
+				_logger.info('from_day: %s' % from_day)
+				_logger.info('created: %s' % created)
+				_logger.info('len_docs: %s' % len_docs)
 				params = {
 					'page': page,
 					'limit': 50,
@@ -37,6 +42,7 @@ class ExtendsResCompany(models.Model):
 					data = response['data']
 					if 'docs' in data:
 						docs = data['docs']
+						len_docs = len(docs)
 						for doc in docs:
 							if 'reference' in doc:
 								created = datetime.strptime(doc['created'].split('T')[0], "%Y-%m-%d")
