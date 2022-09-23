@@ -37,8 +37,10 @@ class ExtendsResCompany(models.Model):
 				r = requests.get(URL_OPERATIONS, params=params, headers=headers)
 				response = r.json()
 				if 'result' in response and response['result'] == True and 'data' in response:
+					print('result')
 					data = response['data']
 					if 'docs' in data:
+						print('docs')
 						docs = data['docs']
 						for doc in docs:
 							if 'reference' in doc:
@@ -60,4 +62,8 @@ class ExtendsResCompany(models.Model):
 								break
 						if len(docs) <= 1:
 							break
+					else:
+						break
+				else:
+					break
 				page += 1
