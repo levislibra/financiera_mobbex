@@ -61,7 +61,6 @@
 					<field name="prestamo_tipo_id" />
 					<field name="responsable_id" widget="many2one_unclickable" />
 					<field name="monto_solicitado" sum="Total" />
-					<field name="saldo" sum="Total" />
 					<field name="plan_id" />
 					<field name="sucursal_id" />
 					<field name="mobbex_stop_motivo" />
