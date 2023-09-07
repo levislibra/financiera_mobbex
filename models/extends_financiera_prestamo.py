@@ -86,9 +86,9 @@ class ExtendsFinancieraPrestamo(models.Model):
 			'return_url': self.mobbex_id.return_url,
 			'features': features,
 			'options': {
-          'button': True,
-          'embed': True,
-          'domain': self.company_id.portal_url,
+				'button': True,
+				'embed': True,
+				'domain': self.company_id.portal_url,
 			}
 		}
 		r = requests.post(url, data=json.dumps(body), headers=headers)

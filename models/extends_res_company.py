@@ -7,7 +7,7 @@ import requests
 
 _logger = logging.getLogger(__name__)
 
-URL_OPERATIONS = 'https://api.mobbex.com/p/operations'
+URL_OPERATIONS = 'https://api.mobbex.com/p/entity/operations'
 
 class ExtendsResCompany(models.Model):
 	_name = 'res.company'
@@ -32,7 +32,10 @@ class ExtendsResCompany(models.Model):
 					'status': 200,
 				}
 				r = requests.get(URL_OPERATIONS, params=params, headers=headers)
+				print("r", r)
+				print("r.status_code", r.status_code)
 				response = r.json()
+				print("response", response)
 				if 'result' in response and response['result'] == True and 'data' in response:
 					print('result')
 					data = response['data']
