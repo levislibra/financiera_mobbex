@@ -4,6 +4,7 @@ from openerp import models, fields, api, tools
 from datetime import datetime, timedelta, date
 from dateutil import relativedelta
 import logging
+import uuid
 
 import requests
 import json
@@ -122,7 +123,8 @@ class ExtendsFinancieraPrestamoCuota(models.Model):
 				total = self.saldo
 				if monto:
 					total = min(monto, self.saldo)
-				reference = str(self.id) + '_' + str(len(self.payment_ids))
+				unique_id = uuid.uuid1()
+				reference = str(self.id) + '_' + str(unique_id)
 				body = {
 					'total': total,
 					'reference': reference,
