@@ -46,11 +46,12 @@ class ExtendsResCompany(models.Model):
 							if 'reference' in doc:
 								created = datetime.strptime(doc['created'].split('T')[0], "%Y-%m-%d")
 								_id = doc['reference'].split('_')[0]
-								if doc['context']['value'] == 'plugin.value.subscriptions:exec':
-									cuota_id = self.env['financiera.prestamo.cuota'].sudo().browse(int(_id))
-									if cuota_id.state == 'activa':
-										cuota_id.mobbex_read_execution_aprobado(doc)
-										_logger.info('Mobbex: nuevo debito procesado.')
+								if _id.isdigit():
+									if doc['context']['value'] == 'plugin.value.subscriptions:exec':
+										cuota_id = self.env['financiera.prestamo.cuota'].sudo().browse(int(_id))
+										if cuota_id.state == 'activa':
+											cuota_id.mobbex_read_execution_aprobado(doc)
+											_logger.info('Mobbex: nuevo debito procesado.')
 								elif doc['context']['value'] == 'plugin.value.payment_order:web':
 									orden_pago_id = self.env['financiera.mobbex.orden.pago'].sudo().browse(int(_id))
 									if orden_pago_id.state != 'cobrada':
